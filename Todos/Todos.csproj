@@ -7,4 +7,10 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Todos.Backend\Todos.Backend.csproj" />
+    <ProjectReference Include="..\Todos.Contract\Todos.Contract.csproj" />
+    <ProjectReference Include="..\Todos.Frontend\Todos.Frontend.csproj" />
+  </ItemGroup>
+
 </Project>
