@@ -5,27 +5,26 @@ using Todos.Contract.Messages;
 
 namespace Todos.Tests
 {
-    public class SelectTodosQueryTests
+    public class SelectTodosQueryHandlerTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void SelectTodos_ReturnsAllTodos()
         {
             var repo = new MemoryTodosRepository();
             Todo[] todos = {
-                new Todo(Id : 1, Title: "Taste JavaScript", Completed: true),
-                new Todo(Id : 2, Title: "Buy Unicorn"),
+                new Todo(ID : 1, Title: "Taste JavaScript", IsCompleted: true),
+                new Todo(ID : 2, Title: "Buy Unicorn"),
             };
             repo.StoreTodos(todos);
             var handler = new SelectTodosQueryHandler(repo);
 
             var result = handler.Handle(new SelectTodosQuery());
 
-            Assert.That(result, Is.EqualTo(new SelectTodosQueryResult(todos)));
+            Todo[] expected = {
+                new Todo(ID : 1, Title: "Taste JavaScript", IsCompleted: true),
+                new Todo(ID : 2, Title: "Buy Unicorn"),
+            };
+            Assert.That(result.Todos, Is.EqualTo(expected));
         }
     }
 }

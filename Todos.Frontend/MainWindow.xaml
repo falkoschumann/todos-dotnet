@@ -10,7 +10,8 @@
         <ListBox Name="todoList">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <CheckBox Tag="{Binding ID}" IsChecked="{Binding IsCompleted}" Margin="0,0,8,0" Click="ToggleTodo" />
                         <TextBlock Text="{Binding Title}" />
                     </StackPanel>
                 </DataTemplate>

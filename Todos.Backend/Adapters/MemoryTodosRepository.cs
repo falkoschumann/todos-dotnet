@@ -10,7 +10,8 @@ namespace Todos.Backend.Adapters
 {
     public class MemoryTodosRepository : ITodosRepository
     {
-        public Todo[] todos = Array.Empty<Todo>();
+        private Todo[] todos = Array.Empty<Todo>();
+
         public Todo[] LoadTodos()
         {
             return todos;

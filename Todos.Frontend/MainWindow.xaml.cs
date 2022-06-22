@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace Todos.Frontend
     /// </summary>
     public partial class MainWindow : Window
     {
+        public event Action<ToggleTodoCommand> OnToggleTodoCommand;
         public event Action<SelectTodosQuery> OnSelectTodosQuery;
 
         public MainWindow()
@@ -37,6 +39,12 @@ namespace Todos.Frontend
         public void Display(SelectTodosQueryResult result)
         {
             todoList.ItemsSource = result.Todos;
+        }
+
+        private void ToggleTodo(object sender, RoutedEventArgs e)
+        {
+            var checkBox = (CheckBox)sender;
+            OnToggleTodoCommand(new ToggleTodoCommand((int)checkBox.Tag));
         }
     }
 }

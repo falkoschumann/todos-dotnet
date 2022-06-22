@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Todos.Contract;
 using Todos.Contract.Messages;
 
-namespace Todos.Backend.MessageHandler
+namespace Todos.Backend.MessageHandlers
 {
     public class SelectTodosQueryHandler : ISelectTodosQueryHandling
     {
