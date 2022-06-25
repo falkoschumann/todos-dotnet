@@ -6,7 +6,7 @@ namespace Todos.Backend.MessageHandlers
 {
     public class DestroyTodoCommandHandler : IDestroyTodoCommandHandling
     {
-        private ITodosRepository repo;
+        private readonly ITodosRepository repo;
 
         public DestroyTodoCommandHandler(ITodosRepository repo)
         {

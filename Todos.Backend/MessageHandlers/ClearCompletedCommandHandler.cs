@@ -6,7 +6,7 @@ namespace Todos.Backend.MessageHandlers
 {
     public class ClearCompletedCommandHandler : IClearCompletedCommandHandling
     {
-        private ITodosRepository repo;
+        private readonly ITodosRepository repo;
 
         public ClearCompletedCommandHandler(ITodosRepository repo)
         {

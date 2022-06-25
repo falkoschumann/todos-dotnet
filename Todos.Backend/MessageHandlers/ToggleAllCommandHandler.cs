@@ -6,7 +6,7 @@ namespace Todos.Backend.MessageHandlers
 {
     public class ToggleAllCommandHandler : IToggleAllCommandHandling
     {
-        private ITodosRepository repo;
+        private readonly ITodosRepository repo;
 
         public ToggleAllCommandHandler(ITodosRepository repo)
         {

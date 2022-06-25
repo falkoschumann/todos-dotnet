@@ -6,7 +6,7 @@ namespace Todos.Backend.MessageHandlers
 {
     public class AddTodoCommandHandler : IAddTodoCommandHandling
     {
-        private ITodosRepository repo;
+        private readonly ITodosRepository repo;
 
         public AddTodoCommandHandler(ITodosRepository repo)
         {

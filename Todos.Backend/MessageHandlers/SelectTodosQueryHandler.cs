@@ -5,7 +5,7 @@ namespace Todos.Backend.MessageHandlers
 {
     public class SelectTodosQueryHandler : ISelectTodosQueryHandling
     {
-        private ITodosRepository repo;
+        private readonly ITodosRepository repo;
 
         public SelectTodosQueryHandler(ITodosRepository repo)
         {
