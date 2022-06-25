@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Todos.Contract;
+using Todos.Contract.Data;
+using Todos.Contract.Messages;
+
+namespace Todos.Backend.MessageHandlers
+{
+    public class DestroyTodoCommandHandler : IDestroyTodoCommandHandling
+    {
+        private ITodosRepository repo;
+
+        public DestroyTodoCommandHandler(ITodosRepository repo)
+        {
+            this.repo = repo;
+        }
+
+        public ICommandStatus Handle(DestroyTodoCommand command)
+        {
+            var todos = repo.LoadTodos().ToList();
+            todos = Destroy(todos, command.ID);
+            repo.StoreTodos(todos.ToArray());
+            return new Success();
+        }
+
+        private static List<Todo> Destroy(List<Todo> todos, int id)
+        {
+            return todos.FindAll(t => t.ID != id).ToList();
+        }
+    }
+}
