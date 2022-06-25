@@ -4,26 +4,26 @@ using Todos.Contract.Messages;
 
 namespace Todos.Backend.MessageHandlers
 {
-    public class DestroyTodoCommandHandler : IDestroyTodoCommandHandling
+    public class ClearCompletedCommandHandler : IClearCompletedCommandHandling
     {
         private ITodosRepository repo;
 
-        public DestroyTodoCommandHandler(ITodosRepository repo)
+        public ClearCompletedCommandHandler(ITodosRepository repo)
         {
             this.repo = repo;
         }
 
-        public ICommandStatus Handle(DestroyTodoCommand command)
+        public ICommandStatus Handle(ClearCompletedCommand command)
         {
             var todos = repo.LoadTodos().ToList();
-            todos = Destroy(todos, command.ID);
+            todos = Clear(todos);
             repo.StoreTodos(todos.ToArray());
             return new Success();
         }
 
-        private static List<Todo> Destroy(List<Todo> todos, int id)
+        private static List<Todo> Clear(List<Todo> todos)
         {
-            return todos.FindAll(t => t.ID != id).ToList();
+            return todos.FindAll(t => !t.IsCompleted).ToList();
         }
     }
 }

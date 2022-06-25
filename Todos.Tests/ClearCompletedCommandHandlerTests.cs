@@ -5,10 +5,10 @@ using Todos.Contract.Messages;
 
 namespace Todos.Tests
 {
-    public class DestroyTodoCommandHandlerTests
+    public class ClearCompletedCommandHandlerTests
     {
         [Test]
-        public void DestroyTodo_DestroysATodo()
+        public void ClearCompleted_RemovesCompletedTodos()
         {
             var repo = new MemoryTodosRepository();
             Todo[] todos = {
@@ -16,9 +16,9 @@ namespace Todos.Tests
                 new Todo(ID : 2, Title: "Buy Unicorn", IsCompleted: false),
             };
             repo.StoreTodos(todos);
-            var handler = new DestroyTodoCommandHandler(repo);
+            var handler = new ClearCompletedCommandHandler(repo);
 
-            var status = handler.Handle(new DestroyTodoCommand(ID: 1));
+            var status = handler.Handle(new ClearCompletedCommand());
 
             Assert.That(status, Is.EqualTo(new Success()));
             Todo[] expected = {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Todos.Contract;
+﻿using Todos.Contract;
 using Todos.Contract.Messages;
 
 namespace Todos.Backend.MessageHandlers
