@@ -25,10 +25,38 @@ namespace Todos
             };
             repo.StoreTodos(todos);
 
-            var selectTodosQueryHandler = new SelectTodosQueryHandler(repo);
+            var addTodoCommandHandler = new AddTodoCommandHandler(repo);
+            var clearCompletedCommandHandler = new ClearCompletedCommandHandler(repo);
+            var destroyTodoCommandHandler = new DestroyTodoCommandHandler(repo);
+            var toggleAllCommandHandler = new ToggleAllCommandHandler(repo);
             var toggleTodoCommandHandler = new ToggleTodoCommandHandler(repo);
+            var selectTodosQueryHandler = new SelectTodosQueryHandler(repo);
 
             var frontend = new MainWindow();
+            frontend.OnAddTodoCommand += c =>
+            {
+                addTodoCommandHandler.Handle(c);
+                var result = selectTodosQueryHandler.Handle(new SelectTodosQuery());
+                frontend.Display(result);
+            };
+            frontend.OnClearCompletedCommand += c =>
+            {
+                clearCompletedCommandHandler.Handle(c);
+                var result = selectTodosQueryHandler.Handle(new SelectTodosQuery());
+                frontend.Display(result);
+            };
+            frontend.OnDestroyTodoCommand += c =>
+            {
+                destroyTodoCommandHandler.Handle(c);
+                var result = selectTodosQueryHandler.Handle(new SelectTodosQuery());
+                frontend.Display(result);
+            };
+            frontend.OnToggleAllCommand += c =>
+            {
+                toggleAllCommandHandler.Handle(c);
+                var result = selectTodosQueryHandler.Handle(new SelectTodosQuery());
+                frontend.Display(result);
+            };
             frontend.OnToggleTodoCommand += c =>
             {
                 toggleTodoCommandHandler.Handle(c);

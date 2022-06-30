@@ -23,6 +23,10 @@ namespace Todos.Frontend
     /// </summary>
     public partial class MainWindow : Window
     {
+        public event Action<AddTodoCommand> OnAddTodoCommand;
+        public event Action<ClearCompletedCommand> OnClearCompletedCommand;
+        public event Action<DestroyTodoCommand> OnDestroyTodoCommand;
+        public event Action<ToggleAllCommand> OnToggleAllCommand;
         public event Action<ToggleTodoCommand> OnToggleTodoCommand;
         public event Action<SelectTodosQuery> OnSelectTodosQuery;
 
@@ -41,10 +45,16 @@ namespace Todos.Frontend
             todoList.ItemsSource = result.Todos;
         }
 
+        private void DestroyTodo(object sender, RoutedEventArgs e)
+        {
+            var control = (Button)sender;
+            OnDestroyTodoCommand(new DestroyTodoCommand((int)control.Tag));
+        }
+
         private void ToggleTodo(object sender, RoutedEventArgs e)
         {
-            var checkBox = (CheckBox)sender;
-            OnToggleTodoCommand(new ToggleTodoCommand((int)checkBox.Tag));
+            var control = (CheckBox)sender;
+            OnToggleTodoCommand(new ToggleTodoCommand((int)control.Tag));
         }
     }
 }

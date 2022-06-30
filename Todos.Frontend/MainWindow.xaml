@@ -7,13 +7,19 @@
         mc:Ignorable="d"
         Title="Todos" Height="450" Width="800">
     <Grid>
-        <ListBox Name="todoList">
+        <ListBox Name="todoList" HorizontalContentAlignment="Stretch">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <CheckBox Tag="{Binding ID}" IsChecked="{Binding IsCompleted}" Margin="0,0,8,0" Click="ToggleTodo" />
-                        <TextBlock Text="{Binding Title}" />
-                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="30" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Column="0" Tag="{Binding ID}" IsChecked="{Binding IsCompleted}" Margin="0,0,8,0" Click="ToggleTodo" />
+                        <TextBlock Grid.Column="1" Text="{Binding Title}" />
+                        <Button Grid.Column="2" Tag="{Binding ID}" Width="20" Height="20" Margin="8,0,0,0" Click="DestroyTodo">X</Button>
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

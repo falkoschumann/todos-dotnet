@@ -15,11 +15,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todos.Tests", "Todos.Tests\Todos.Tests.csproj", "{16A6354F-D429-4D42-AF4F-7FE5453CC090}"
 EndProject
-Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Todos", "Todos\Todos.csproj", "{4285AFBF-6E16-437C-B5DB-C175F53E8F53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todos", "Todos\Todos.csproj", "{4285AFBF-6E16-437C-B5DB-C175F53E8F53}"
 EndProject
-Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Todos.Frontend", "Todos.Frontend\Todos.Frontend.csproj", "{4CA91C49-F967-4C44-973B-FE4FAB4C6DC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todos.Frontend", "Todos.Frontend\Todos.Frontend.csproj", "{4CA91C49-F967-4C44-973B-FE4FAB4C6DC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todos.Backend.Server", "Todos.Backend.Server\Todos.Backend.Server.csproj", "{41DAA792-0E57-42E4-BF2D-9AB920627C2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todos.Backend.Server", "Todos.Backend.Server\Todos.Backend.Server.csproj", "{41DAA792-0E57-42E4-BF2D-9AB920627C2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
