@@ -45,6 +45,12 @@ namespace Todos.Frontend
             todoList.ItemsSource = result.Todos;
         }
 
+        private void HandleToggleAll(object sender, RoutedEventArgs e)
+        {
+            var control = (CheckBox)sender;
+            OnToggleAllCommand(new ToggleAllCommand(control.IsChecked ?? false));
+        }
+
         private void HandleNewTodoKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter)
