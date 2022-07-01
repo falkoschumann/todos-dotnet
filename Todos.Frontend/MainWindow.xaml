@@ -5,9 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Todos.Frontend"
         mc:Ignorable="d"
-        Title="Todos" Height="450" Width="800">
+        Title="Todos" Height="450" Width="300">
     <Grid>
-        <ListBox Name="todoList" HorizontalContentAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBox Grid.Row="0" KeyDown="HandleNewTodoKeyDown" />
+        <ListBox Grid.Row="1" Name="todoList" HorizontalContentAlignment="Stretch">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -16,12 +21,13 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="30" />
                         </Grid.ColumnDefinitions>
-                        <CheckBox Grid.Column="0" Tag="{Binding ID}" IsChecked="{Binding IsCompleted}" Margin="0,0,8,0" Click="ToggleTodo" />
+                        <CheckBox Grid.Column="0" Tag="{Binding ID}" IsChecked="{Binding IsCompleted}" Click="HandleToggleTodo" />
                         <TextBlock Grid.Column="1" Text="{Binding Title}" />
-                        <Button Grid.Column="2" Tag="{Binding ID}" Width="20" Height="20" Margin="8,0,0,0" Click="DestroyTodo">X</Button>
+                        <Button Grid.Column="2" Tag="{Binding ID}" Width="20" Height="20"  Click="HandleDestroyTodo">X</Button>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
     </Grid>
 </Window>
+ 

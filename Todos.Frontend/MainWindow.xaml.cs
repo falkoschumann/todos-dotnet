@@ -45,13 +45,30 @@ namespace Todos.Frontend
             todoList.ItemsSource = result.Todos;
         }
 
-        private void DestroyTodo(object sender, RoutedEventArgs e)
+        private void HandleNewTodoKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter)
+            {
+                return;
+            }
+
+            var control = (TextBox)sender;
+            var title = control.Text.Trim();
+            if (title.Length == 0)
+            {
+                return ;
+            }
+
+            OnAddTodoCommand(new AddTodoCommand(title));
+        }
+
+        private void HandleDestroyTodo(object sender, RoutedEventArgs e)
         {
             var control = (Button)sender;
             OnDestroyTodoCommand(new DestroyTodoCommand((int)control.Tag));
         }
 
-        private void ToggleTodo(object sender, RoutedEventArgs e)
+        private void HandleToggleTodo(object sender, RoutedEventArgs e)
         {
             var control = (CheckBox)sender;
             OnToggleTodoCommand(new ToggleTodoCommand((int)control.Tag));
