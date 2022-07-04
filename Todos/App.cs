@@ -28,6 +28,7 @@ namespace Todos
             var addTodoCommandHandler = new AddTodoCommandHandler(repo);
             var clearCompletedCommandHandler = new ClearCompletedCommandHandler(repo);
             var destroyTodoCommandHandler = new DestroyTodoCommandHandler(repo);
+            var saveTodoCommandHandler = new SaveTodoCommandHandler(repo);
             var toggleAllCommandHandler = new ToggleAllCommandHandler(repo);
             var toggleTodoCommandHandler = new ToggleTodoCommandHandler(repo);
             var selectTodosQueryHandler = new SelectTodosQueryHandler(repo);
@@ -48,6 +49,12 @@ namespace Todos
             frontend.OnDestroyTodoCommand += c =>
             {
                 destroyTodoCommandHandler.Handle(c);
+                var result = selectTodosQueryHandler.Handle(new SelectTodosQuery());
+                frontend.Display(result);
+            };
+            frontend.OnSaveTodoCommand += c =>
+            {
+                saveTodoCommandHandler.Handle(c);
                 var result = selectTodosQueryHandler.Handle(new SelectTodosQuery());
                 frontend.Display(result);
             };

@@ -5,43 +5,45 @@ using Todos.Contract.Messages;
 
 namespace Todos.Tests
 {
-    public class AddTodoCommandHandlerTests
+    public class SaveTodoCommandHandlerTests
     {
         [Test]
-        public void AddTodo_SavesNewTodo()
+        public void SaveTodo_ChangesTodosTitle()
         {
             var repo = new MemoryTodosRepository();
             Todo[] todos = {
                 new Todo(ID : 1, Title: "Taste JavaScript", IsCompleted: true),
+                new Todo(ID : 2, Title: "Buy Unicorn", IsCompleted: false),
             };
             repo.StoreTodos(todos);
-            var handler = new AddTodoCommandHandler(repo);
+            var handler = new SaveTodoCommandHandler(repo);
 
-            var status = handler.Handle(new AddTodoCommand(Title: "Buy Unicorn"));
+            var status = handler.Handle(new SaveTodoCommand(Id: 1, Title: "Taste TypeScript"));
 
             Assert.That(status, Is.EqualTo(new Success()));
             Todo[] expected = {
-                new Todo(ID : 1, Title: "Taste JavaScript", IsCompleted: true),
+                new Todo(ID : 1, Title: "Taste TypeScript", IsCompleted: true),
                 new Todo(ID : 2, Title: "Buy Unicorn", IsCompleted: false),
             };
             Assert.That(repo.LoadTodos(), Is.EqualTo(expected));
         }
 
         [Test]
-        public void AddTodo_DoesNothingIfTitleIsEmpty()
+        public void SaveTodo_DestroyTodoIfTitleIsEmpty()
         {
             var repo = new MemoryTodosRepository();
             Todo[] todos = {
                 new Todo(ID : 1, Title: "Taste JavaScript", IsCompleted: true),
+                new Todo(ID : 2, Title: "Buy Unicorn", IsCompleted: false),
             };
             repo.StoreTodos(todos);
-            var handler = new AddTodoCommandHandler(repo);
+            var handler = new SaveTodoCommandHandler(repo);
 
-            var status = handler.Handle(new AddTodoCommand(Title: ""));
+            var status = handler.Handle(new SaveTodoCommand(Id: 1, Title: ""));
 
             Assert.That(status, Is.EqualTo(new Success()));
             Todo[] expected = {
-                new Todo(ID : 1, Title: "Taste JavaScript", IsCompleted: true),
+                new Todo(ID : 2, Title: "Buy Unicorn", IsCompleted: false),
             };
             Assert.That(repo.LoadTodos(), Is.EqualTo(expected));
         }
