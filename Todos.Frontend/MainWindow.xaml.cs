@@ -31,9 +31,6 @@ namespace Todos.Frontend
         public event Action<ToggleTodoCommand> OnToggleTodoCommand;
         public event Action<SelectTodosQuery> OnSelectTodosQuery;
 
-        private Todo[] todos;
-        private long lastTicks = 0;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -46,14 +43,15 @@ namespace Todos.Frontend
 
         public void Display(SelectTodosQueryResult result)
         {
-            todos = result.Todos;
             todoList.ItemsSource = result.Todos;
+            toggleAll.IsChecked = result.Todos.Select(t => t.IsCompleted).Aggregate((e1, e2) => e1 && e2);
         }
 
-        private void HandleToggleAll(object sender, RoutedEventArgs e)
+        private void HandleToggleAllClick(object sender, RoutedEventArgs e)
         {
             var control = (CheckBox)sender;
-            OnToggleAllCommand(new ToggleAllCommand(control.IsChecked ?? false));
+            var isChecked = control.IsChecked ?? false;
+            OnToggleAllCommand(new ToggleAllCommand(isChecked));
         }
 
         private void HandleNewTodoKeyDown(object sender, KeyEventArgs e)
@@ -65,27 +63,45 @@ namespace Todos.Frontend
 
             var control = (TextBox)sender;
             var title = control.Text.Trim();
-            if (title.Length == 0)
+            OnAddTodoCommand(new AddTodoCommand(title));
+            control.Text = "";
+        }
+
+        private void HandleToggleTodoClick(object sender, RoutedEventArgs e)
+        {
+            var control = (CheckBox)sender;
+            var id = (int)control.Tag;
+            OnToggleTodoCommand(new ToggleTodoCommand(id));
+        }
+
+        private void HandleViewTodoClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount != 2)
             {
                 return;
             }
 
-            OnAddTodoCommand(new AddTodoCommand(title));
+            SetTodoEditVisible(sender, true);
         }
 
-        private void HandleToggleTodo(object sender, RoutedEventArgs e)
+        private static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
         {
-            var control = (CheckBox)sender;
-            OnToggleTodoCommand(new ToggleTodoCommand((int)control.Tag));
-        }
-
-        private void HandleEditTodo(object sender, MouseButtonEventArgs e)
-        {
-            if ((DateTime.Now.Ticks - lastTicks) < 3000000)
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
             {
-                ShowTodoEditor(sender);
+                var child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is T t)
+                {
+                    return t;
+                }else
+                {
+                    var children = FindVisualChild<T>(child);
+                    if (children != null)
+                    {
+                        return children;
+                    }
+                }
             }
-            lastTicks = DateTime.Now.Ticks;
+            return null;
         }
 
         private void HandleDestroyTodo(object sender, RoutedEventArgs e)
@@ -94,81 +110,84 @@ namespace Todos.Frontend
             OnDestroyTodoCommand(new DestroyTodoCommand((int)control.Tag));
         }
 
-        private void HandleEditTodoKeyDown(object sender, KeyEventArgs e) {
-            switch (e.Key)
-            {
-                case Key.Enter:
-                    HandleSubmitEditTodo(sender, e);
-                    break;
-                case Key.Escape:
-                    var control = (TextBox)sender;
-                    var id = (int)control.Tag;
-                    int idx = -1;
-                    for (var i = 0; i < todos.Length; i++)
-                    {
-                        if (todos[i].ID == id)
-                        {
-                            idx = i;
-                            break;
-                        }
-                    }
-                    var todoItem = (ListBoxItem) todoList.ItemContainerGenerator.ContainerFromIndex(idx);
-                    var todo = (Todo)todoItem.Content;
-                    control.Text = todo.Title;
-                    ShowTodoViewer(sender);
-                    break;
-            }
-        }
-
-        private void HandleSubmitEditTodo(object sender, RoutedEventArgs e) {
-            return;
-
+        private void HandleEditTodoLostFocus(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("HandleEditTodoFocusLost: " + sender);
             var control = (TextBox)sender;
             var value = control.Text.Trim();
             if (value != "")
             {
                 OnSaveTodoCommand(new SaveTodoCommand((int)control.Tag, value));
-                control.Text = "";
-            } else
+            }
+            else
             {
                 OnDestroyTodoCommand(new DestroyTodoCommand((int)control.Tag));
             }
-
-            ShowTodoViewer(sender);
         }
 
-        private void ShowTodoEditor(object sender)
-        {
-            // TODO: Close any other editor
-
-            var text = (FrameworkElement)sender;
-            var viewerGrid = (Grid)text.Parent;
-            var stack = (StackPanel)viewerGrid.Parent;
-
-            // Hide viewer
-            stack.Children[0].Visibility = Visibility.Collapsed;
-            
-            // Show editor
-            var editorGrid = (Grid)stack.Children[1];
-            editorGrid.Visibility = Visibility.Visible;
-            var editorTextBox = (TextBox)editorGrid.Children[0];
-            // FIXME: Text is not selected and focused
-            Debug.WriteLine("TextBox: " + editorTextBox.Text);
-            editorTextBox.SelectAll();
-            editorTextBox.Focus();
+        private void HandleEditTodoKeyDown(object sender, KeyEventArgs e) {
+            Debug.WriteLine("HandleEditTodoKeyDown: " + sender);
+            switch (e.Key)
+            {
+                case Key.Enter:
+                    HandleEditTodoLostFocus(sender, e);
+                    break;
+                case Key.Escape:
+                    // FIXME: Ein geänderter Wert wird gesichert, statt den alten wiederherzustellen.
+                    SetTodoEditVisible(sender, false);
+                    OnSelectTodosQuery(new SelectTodosQuery());
+                    break;
+            }
         }
 
-        private void ShowTodoViewer(object sender)
+        private void SetTodoEditVisible(object sender, bool visible)
         {
-            var text = (FrameworkElement)sender;
-            var grid = (Grid)text.Parent;
-            var stack = (StackPanel)grid.Parent;
+            var control = (FrameworkElement)sender;
+            var id = (int)control.Tag;
+            var idx = -1;
+            var todos = (Todo[])todoList.ItemsSource;
+            for (var i = 0; i < todos.Length; i++)
+            {
+                var todo = todos[i];
+                if (todo.ID == id)
+                {
+                    idx = i;
+                    break;
+                }
+            }
+            Debug.WriteLine("SetTodoEditVisible: idx=" + idx);
 
-            // Show viewer
-            stack.Children[0].Visibility = Visibility.Visible;
+            //var item = todoList.ItemContainerGenerator.ContainerFromItem(todoList.Items.CurrentItem);
+            var item = todoList.ItemContainerGenerator.ContainerFromIndex(idx);
+            if (item == null)
+            {
+                Debug.WriteLine("SetTodoEditVisible: item=null");
+                return;
+            }
 
-            // Hide editor
-            stack.Children[1].Visibility = Visibility.Collapsed;
+            Debug.WriteLine("SetTodoEditVisible: " + item);
+            var presenter = FindVisualChild<ContentPresenter>(item);
+            var template = presenter.ContentTemplate;
+            var view = (Grid)template.FindName("todoView", presenter);
+            var edit = (Grid)template.FindName("todoEdit", presenter);
+
+            if (visible)
+            {
+                view.Visibility = Visibility.Collapsed;
+                edit.Visibility = Visibility.Visible;
+                var text = (TextBox)edit.Children[0];
+                Debug.WriteLine("SetTodoEditVisible: text=" + text);
+                text.SelectAll();
+                Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, () => {
+                    text.Focus();
+                });
+            }
+            else
+            {
+                view.Visibility = Visibility.Visible;
+                edit.Visibility = Visibility.Collapsed;
+
+            }
         }
     }
 }

@@ -16,28 +16,28 @@
                 <ColumnDefinition Width="30" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <CheckBox Grid.Column="0" Click="HandleToggleAll" />
+            <CheckBox Name="toggleAll" Grid.Column="0" Click="HandleToggleAllClick" />
             <TextBox Grid.Column="1" KeyDown="HandleNewTodoKeyDown" />
         </Grid>
-        <ListBox Grid.Row="1" Name="todoList" HorizontalContentAlignment="Stretch">
+        <ListBox Grid.Row="1" Name="todoList" IsSynchronizedWithCurrentItem="True" HorizontalContentAlignment="Stretch">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <Grid>
+                        <Grid Name="todoView">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="30" />
                             </Grid.ColumnDefinitions>
-                            <CheckBox Grid.Column="0" Tag="{Binding ID}" IsChecked="{Binding IsCompleted}" Click="HandleToggleTodo" />
-                            <TextBlock Grid.Column="1" Tag="{Binding ID}" Text="{Binding Title}" MouseDown="HandleEditTodo" />
+                            <CheckBox Grid.Column="0" Tag="{Binding ID}" IsChecked="{Binding IsCompleted}" Click="HandleToggleTodoClick" />
+                            <TextBlock Grid.Column="1" Tag="{Binding ID}" Text="{Binding Title}" MouseDown="HandleViewTodoClick" />
                             <Button Grid.Column="2" Tag="{Binding ID}" Width="20" Height="20"  Click="HandleDestroyTodo">X</Button>
                         </Grid>
-                        <Grid Visibility="Collapsed">
+                        <Grid Name="todoEdit" Visibility="Collapsed">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBox Tag="{Binding ID}" Text="{Binding Title}" LostFocus="HandleSubmitEditTodo" KeyDown="HandleEditTodoKeyDown" />
+                            <TextBox Tag="{Binding ID}" Text="{Binding Title}" LostFocus="HandleEditTodoLostFocus" KeyDown="HandleEditTodoKeyDown" />
                         </Grid>
                     </StackPanel>
                 </DataTemplate>
