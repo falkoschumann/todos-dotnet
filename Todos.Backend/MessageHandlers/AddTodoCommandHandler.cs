@@ -28,7 +28,7 @@ namespace Todos.Backend.MessageHandlers
                 return todos;
             }
 
-            var id = todos.Select(t => t.ID).Max();
+            var id = todos.Select(t => t.Id).Max();
             id++;
             var todo = new Todo(id, title, IsCompleted: false);
             todos.Add(todo);

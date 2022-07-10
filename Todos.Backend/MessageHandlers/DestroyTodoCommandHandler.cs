@@ -23,7 +23,7 @@ namespace Todos.Backend.MessageHandlers
 
         private static List<Todo> Destroy(List<Todo> todos, int id)
         {
-            return todos.FindAll(t => t.ID != id).ToList();
+            return todos.FindAll(t => t.Id != id).ToList();
         }
     }
 }

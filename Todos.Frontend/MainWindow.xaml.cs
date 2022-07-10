@@ -41,18 +41,17 @@ namespace Todos.Frontend
             OnSelectTodosQuery(new SelectTodosQuery());
         }
 
+        #region Messages
+
         public void Display(SelectTodosQueryResult result)
         {
             todoList.ItemsSource = result.Todos;
-            toggleAll.IsChecked = result.Todos.Select(t => t.IsCompleted).Aggregate((e1, e2) => e1 && e2);
+            toggleAll.IsChecked = result.Todos.Select(t => t.IsCompleted).Aggregate(false, (e1, e2) => e1 && e2);
         }
 
-        private void HandleToggleAllClick(object sender, RoutedEventArgs e)
-        {
-            var control = (CheckBox)sender;
-            var isChecked = control.IsChecked ?? false;
-            OnToggleAllCommand(new ToggleAllCommand(isChecked));
-        }
+        #endregion
+
+        #region Header
 
         private void HandleNewTodoKeyDown(object sender, KeyEventArgs e)
         {
@@ -61,82 +60,101 @@ namespace Todos.Frontend
                 return;
             }
 
-            var control = (TextBox)sender;
-            var title = control.Text.Trim();
+            var textBox = (TextBox)sender;
+            var title = textBox.Text.Trim();
             OnAddTodoCommand(new AddTodoCommand(title));
-            control.Text = "";
+            textBox.Text = "";
         }
 
-        private void HandleToggleTodoClick(object sender, RoutedEventArgs e)
+        #endregion
+
+        #region Todo List
+
+        private void HandleToggleAll(object sender, RoutedEventArgs e)
         {
-            var control = (CheckBox)sender;
-            var id = (int)control.Tag;
-            OnToggleTodoCommand(new ToggleTodoCommand(id));
+            var checkBox = (CheckBox)sender;
+            var isChecked = checkBox.IsChecked ?? false;
+            OnToggleAllCommand(new ToggleAllCommand(isChecked));
         }
 
-        private void HandleViewTodoClick(object sender, MouseButtonEventArgs e)
+        #endregion
+
+        #region Todo Item
+
+        private void HandleToggle(object sender, RoutedEventArgs e)
+        {
+            var (_, todo) = FindItem(sender, "view");
+            OnToggleTodoCommand(new ToggleTodoCommand(todo.Id));
+        }
+
+        private void HandleDestroy(object sender, RoutedEventArgs e)
+        {
+            var (_, todo) = FindItem(sender, "view");
+            OnDestroyTodoCommand(new DestroyTodoCommand(todo.Id));
+        }
+
+        private void HandleEdit(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount != 2)
             {
                 return;
             }
 
+            // TODO: Determine todo ID
+            // TODO: Cache editing
             SetTodoEditVisible(sender, true);
         }
-
-        private static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
+        private void HandleSubmit(object sender, RoutedEventArgs e)
         {
-            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-            {
-                var child = VisualTreeHelper.GetChild(obj, i);
-                if (child != null && child is T t)
-                {
-                    return t;
-                }else
-                {
-                    var children = FindVisualChild<T>(child);
-                    if (children != null)
-                    {
-                        return children;
-                    }
-                }
-            }
-            return null;
-        }
-
-        private void HandleDestroyTodo(object sender, RoutedEventArgs e)
-        {
-            var control = (Button)sender;
-            OnDestroyTodoCommand(new DestroyTodoCommand((int)control.Tag));
-        }
-
-        private void HandleEditTodoLostFocus(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("HandleEditTodoFocusLost: " + sender);
+            Debug.WriteLine("HandleSubmit: " + sender);
             var control = (TextBox)sender;
             var value = control.Text.Trim();
-            if (value != "")
-            {
-                OnSaveTodoCommand(new SaveTodoCommand((int)control.Tag, value));
-            }
-            else
-            {
-                OnDestroyTodoCommand(new DestroyTodoCommand((int)control.Tag));
-            }
+            OnSaveTodoCommand(new SaveTodoCommand((int)control.Tag, value));
+            // TODO Reset editing
         }
 
-        private void HandleEditTodoKeyDown(object sender, KeyEventArgs e) {
+        private void HandleEditTodoKeyDown(object sender, KeyEventArgs e)
+        {
             Debug.WriteLine("HandleEditTodoKeyDown: " + sender);
+            // TODO: Determine todo ID
             switch (e.Key)
             {
                 case Key.Enter:
-                    HandleEditTodoLostFocus(sender, e);
+                    HandleSubmit(sender, e);
                     break;
                 case Key.Escape:
                     // FIXME: Ein geänderter Wert wird gesichert, statt den alten wiederherzustellen.
                     SetTodoEditVisible(sender, false);
                     OnSelectTodosQuery(new SelectTodosQuery());
                     break;
+            }
+        }
+
+        private (FrameworkElement, Todo) FindItem(object sender, string name)
+        {
+            var element = (FrameworkElement)sender;
+            var parent = (FrameworkElement)element.Parent;
+            var stack = (StackPanel)parent.Parent;
+            var todo = (Todo)parent.Tag;
+            FrameworkElement view, edit;
+            if (parent.Name == "View")
+            {
+                view = parent;
+                edit = (FrameworkElement)stack.Children[1];
+            }
+            else
+            {
+                edit = parent;
+                view = (FrameworkElement)stack.Children[0];
+            }
+
+            if (name == "view")
+            {
+                return (view, todo);
+            }
+            else
+            {
+                return (edit, todo);
             }
         }
 
@@ -149,7 +167,7 @@ namespace Todos.Frontend
             for (var i = 0; i < todos.Length; i++)
             {
                 var todo = todos[i];
-                if (todo.ID == id)
+                if (todo.Id == id)
                 {
                     idx = i;
                     break;
@@ -168,8 +186,8 @@ namespace Todos.Frontend
             Debug.WriteLine("SetTodoEditVisible: " + item);
             var presenter = FindVisualChild<ContentPresenter>(item);
             var template = presenter.ContentTemplate;
-            var view = (Grid)template.FindName("todoView", presenter);
-            var edit = (Grid)template.FindName("todoEdit", presenter);
+            var view = (Grid)template.FindName("view", presenter);
+            var edit = (Grid)template.FindName("edit", presenter);
 
             if (visible)
             {
@@ -178,7 +196,8 @@ namespace Todos.Frontend
                 var text = (TextBox)edit.Children[0];
                 Debug.WriteLine("SetTodoEditVisible: text=" + text);
                 text.SelectAll();
-                Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, () => {
+                Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, () =>
+                {
                     text.Focus();
                 });
             }
@@ -189,5 +208,28 @@ namespace Todos.Frontend
 
             }
         }
+
+        private static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
+        {
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                var child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is T t)
+                {
+                    return t;
+                }
+                else
+                {
+                    var children = FindVisualChild<T>(child);
+                    if (children != null)
+                    {
+                        return children;
+                    }
+                }
+            }
+            return null;
+        }
+
+        #endregion
     }
 }

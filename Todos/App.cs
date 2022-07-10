@@ -20,8 +20,8 @@ namespace Todos
         {
             var repo = new MemoryTodosRepository();
             Todo[] todos = {
-                new Todo(ID : 1, Title: "Taste JavaScript", IsCompleted: true),
-                new Todo(ID : 2, Title: "Buy Unicorn"),
+                new Todo(Id : 1, Title: "Taste JavaScript", IsCompleted: true),
+                new Todo(Id : 2, Title: "Buy Unicorn"),
             };
             repo.StoreTodos(todos);
 

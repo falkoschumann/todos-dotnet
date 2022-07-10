@@ -23,7 +23,7 @@ namespace Todos.Backend.MessageHandlers
 
         private static List<Todo> Toggle(List<Todo> todos, int id)
         {
-            return todos.Select(t => t.ID == id ? new Todo(t.ID, t.Title, !t.IsCompleted) : t).ToList();
+            return todos.Select(t => t.Id == id ? new Todo(t.Id, t.Title, !t.IsCompleted) : t).ToList();
         }
     }
 }

@@ -25,10 +25,10 @@ namespace Todos.Backend.MessageHandlers
         {
             if (title.Length == 0)
             {
-                return todos.FindAll(t => t.ID != id).ToList();
+                return todos.FindAll(t => t.Id != id).ToList();
             }
 
-            return todos.Select(t => t.ID == id ? new Todo(t.ID, title, t.IsCompleted) : t).ToList();
+            return todos.Select(t => t.Id == id ? new Todo(t.Id, title, t.IsCompleted) : t).ToList();
         }
     }
 }
