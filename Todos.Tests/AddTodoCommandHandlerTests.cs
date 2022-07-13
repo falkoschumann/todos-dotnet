@@ -11,6 +11,22 @@ namespace Todos.Tests
         public void AddTodo_SavesNewTodo()
         {
             var repo = new MemoryTodosRepository();
+            var todos = Array.Empty<Todo>();
+            repo.StoreTodos(todos);
+            var handler = new AddTodoCommandHandler(repo);
+
+            var status = handler.Handle(new AddTodoCommand(Title: "Taste JavaScript"));
+
+            Assert.That(status, Is.EqualTo(new Success()));
+            Todo[] expected = {
+                new Todo(Id : 1, Title: "Taste JavaScript", IsCompleted: false),
+            };
+            Assert.That(repo.LoadTodos(), Is.EqualTo(expected));
+        }
+
+        public void AddTodo_IncrementsId()
+        {
+            var repo = new MemoryTodosRepository();
             Todo[] todos = {
                 new Todo(Id : 1, Title: "Taste JavaScript", IsCompleted: true),
             };

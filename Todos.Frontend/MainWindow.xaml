@@ -25,8 +25,8 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <!-- Todo Item -->
-                    <StackPanel>
-                        <Grid Name="view" Tag="{Binding}">
+                    <StackPanel Tag="{Binding}">
+                        <Grid Name="view">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />
                                 <ColumnDefinition Width="*" />
@@ -36,11 +36,11 @@
                             <TextBlock Grid.Column="1" Text="{Binding Title}" MouseDown="HandleEdit" VerticalAlignment="Center" />
                             <Button Grid.Column="2" Width="20" Height="20"  Click="HandleDestroy" Margin="10,0,0,0" VerticalAlignment="Center">X</Button>
                         </Grid>
-                        <Grid Name="edit" Tag="{Binding}" Visibility="Collapsed">
+                        <Grid Name="edit" Visibility="Collapsed">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBox Text="{Binding PTitle}" LostFocus="HandleSubmit" KeyDown="HandleEditTodoKeyDown" />
+                            <TextBox Name="text" Text="{Binding Title}" LostFocus="HandleSubmit" KeyDown="HandleKeyDown" />
                         </Grid>
                     </StackPanel>
                 </DataTemplate>

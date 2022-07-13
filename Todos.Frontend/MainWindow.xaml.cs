@@ -83,13 +83,13 @@ namespace Todos.Frontend
 
         private void HandleToggle(object sender, RoutedEventArgs e)
         {
-            var (_, todo) = FindItem(sender, "view");
+            var todo = GetTodo(sender);
             OnToggleTodoCommand(new ToggleTodoCommand(todo.Id));
         }
 
         private void HandleDestroy(object sender, RoutedEventArgs e)
         {
-            var (_, todo) = FindItem(sender, "view");
+            var todo = GetTodo(sender);
             OnDestroyTodoCommand(new DestroyTodoCommand(todo.Id));
         }
 
@@ -100,134 +100,69 @@ namespace Todos.Frontend
                 return;
             }
 
-            // TODO: Determine todo ID
-            // TODO: Cache editing
-            SetTodoEditVisible(sender, true);
+            Debug.WriteLine("HandleEdit");
+            var todo = GetTodo(sender);
+            var (view, edit, text) = GetControls(sender);
+            view.Visibility = Visibility.Collapsed;
+            edit.Visibility = Visibility.Visible;
+            text.SelectAll();
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, () =>
+            {
+                text.Focus();
+            });
         }
         private void HandleSubmit(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("HandleSubmit: " + sender);
+            Debug.WriteLine("HandleSubmit");
+            var todo = GetTodo(sender);
             var control = (TextBox)sender;
-            var value = control.Text.Trim();
-            OnSaveTodoCommand(new SaveTodoCommand((int)control.Tag, value));
-            // TODO Reset editing
+            OnSaveTodoCommand(new SaveTodoCommand(todo.Id, control.Text));
+            var (view, edit, _) = GetControls(sender); 
+            view.Visibility = Visibility.Visible;
+            edit.Visibility = Visibility.Collapsed;
         }
 
-        private void HandleEditTodoKeyDown(object sender, KeyEventArgs e)
+        private void HandleKeyDown(object sender, KeyEventArgs e)
         {
-            Debug.WriteLine("HandleEditTodoKeyDown: " + sender);
-            // TODO: Determine todo ID
+            Debug.WriteLine("HandleKeyDown");
             switch (e.Key)
             {
                 case Key.Enter:
                     HandleSubmit(sender, e);
                     break;
                 case Key.Escape:
-                    // FIXME: Ein geänderter Wert wird gesichert, statt den alten wiederherzustellen.
-                    SetTodoEditVisible(sender, false);
-                    OnSelectTodosQuery(new SelectTodosQuery());
+                    HandleCancel(sender);
                     break;
             }
         }
 
-        private (FrameworkElement, Todo) FindItem(object sender, string name)
+        private void HandleCancel(object sender)
+        {
+            var todo = GetTodo(sender);
+            var (view, edit, text) = GetControls(sender);
+            text.Text = todo.Title;
+            view.Visibility = Visibility.Visible;
+            edit.Visibility = Visibility.Collapsed;
+        }
+
+        private static Todo GetTodo(object sender)
         {
             var element = (FrameworkElement)sender;
             var parent = (FrameworkElement)element.Parent;
             var stack = (StackPanel)parent.Parent;
-            var todo = (Todo)parent.Tag;
-            FrameworkElement view, edit;
-            if (parent.Name == "View")
-            {
-                view = parent;
-                edit = (FrameworkElement)stack.Children[1];
-            }
-            else
-            {
-                edit = parent;
-                view = (FrameworkElement)stack.Children[0];
-            }
-
-            if (name == "view")
-            {
-                return (view, todo);
-            }
-            else
-            {
-                return (edit, todo);
-            }
+            var todo = (Todo)stack.Tag;
+            return todo;
         }
 
-        private void SetTodoEditVisible(object sender, bool visible)
+        private static (FrameworkElement, FrameworkElement, TextBox) GetControls(object sender)
         {
-            var control = (FrameworkElement)sender;
-            var id = (int)control.Tag;
-            var idx = -1;
-            var todos = (Todo[])todoList.ItemsSource;
-            for (var i = 0; i < todos.Length; i++)
-            {
-                var todo = todos[i];
-                if (todo.Id == id)
-                {
-                    idx = i;
-                    break;
-                }
-            }
-            Debug.WriteLine("SetTodoEditVisible: idx=" + idx);
-
-            //var item = todoList.ItemContainerGenerator.ContainerFromItem(todoList.Items.CurrentItem);
-            var item = todoList.ItemContainerGenerator.ContainerFromIndex(idx);
-            if (item == null)
-            {
-                Debug.WriteLine("SetTodoEditVisible: item=null");
-                return;
-            }
-
-            Debug.WriteLine("SetTodoEditVisible: " + item);
-            var presenter = FindVisualChild<ContentPresenter>(item);
-            var template = presenter.ContentTemplate;
-            var view = (Grid)template.FindName("view", presenter);
-            var edit = (Grid)template.FindName("edit", presenter);
-
-            if (visible)
-            {
-                view.Visibility = Visibility.Collapsed;
-                edit.Visibility = Visibility.Visible;
-                var text = (TextBox)edit.Children[0];
-                Debug.WriteLine("SetTodoEditVisible: text=" + text);
-                text.SelectAll();
-                Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, () =>
-                {
-                    text.Focus();
-                });
-            }
-            else
-            {
-                view.Visibility = Visibility.Visible;
-                edit.Visibility = Visibility.Collapsed;
-
-            }
-        }
-
-        private static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
-        {
-            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-            {
-                var child = VisualTreeHelper.GetChild(obj, i);
-                if (child != null && child is T t)
-                {
-                    return t;
-                }
-                else
-                {
-                    var children = FindVisualChild<T>(child);
-                    if (children != null)
-                    {
-                        return children;
-                    }
-                }
-            }
-            return null;
+            var element = (FrameworkElement)sender;
+            var parent = (FrameworkElement)element.Parent;
+            var stack = (StackPanel)parent.Parent;
+            var view = (FrameworkElement)stack.Children[0];
+            var edit = (FrameworkElement)stack.Children[1];
+            var text = (TextBox)edit.FindName("text");
+            return (view, edit, text);
         }
 
         #endregion
