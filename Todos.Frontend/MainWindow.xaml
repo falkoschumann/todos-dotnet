@@ -54,21 +54,7 @@
             </ListBox>
         </Grid>
         
-        <!-- Footer -->
-        <Grid Grid.Row="2" Margin="5,5,5,5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Name="activeCount" Text="0 item left" VerticalAlignment="Center"/>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                <RadioButton Style="{StaticResource {x:Type ToggleButton}}" Padding="2,2,2,2" IsChecked="True" Click="HandleFilterAll">All</RadioButton>
-                <RadioButton Style="{StaticResource {x:Type ToggleButton}}" Margin="5,0,5,0" Padding="2,2,2,2" Click="HandleFilterActive">Active</RadioButton>
-                <RadioButton Style="{StaticResource {x:Type ToggleButton}}" Padding="2,2,2,2" Click="HandleFilterCompleted">Completed</RadioButton>
-            </StackPanel>
-            <Button Grid.Column="2" Name="clearCompleted" Padding="2,2,2,2" Click="HandleClearCompleted">Clear completed</Button>
-        </Grid>
+        <local:Footer Grid.Row="2" x:Name="footer" />
     </Grid>
 </Window>
  

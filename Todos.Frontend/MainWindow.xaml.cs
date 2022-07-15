@@ -14,6 +14,10 @@ namespace Todos.Frontend
     /// </summary>
     public partial class MainWindow : Window
     {
+        // TODO: Extrahiere Header
+        // TODO: Extrahiere Main
+        // TODO: Mache Main und Footer unsichtbar, wenn es keine Todos gibt
+
         public event Action<AddTodoCommand>? OnAddTodoCommand;
         public event Action<ClearCompletedCommand>? OnClearCompletedCommand;
         public event Action<DestroyTodoCommand>? OnDestroyTodoCommand;
@@ -22,11 +26,11 @@ namespace Todos.Frontend
         public event Action<ToggleTodoCommand>? OnToggleTodoCommand;
         public event Action<SelectTodosQuery>? OnSelectTodosQuery;
 
-        private Filter filter = Filter.All;
-
         public MainWindow()
         {
             InitializeComponent();
+            footer.OnClearCompleted += () => OnClearCompletedCommand?.Invoke(new ClearCompletedCommand());
+            footer.OnFilterChanged += f => OnSelectTodosQuery?.Invoke(new SelectTodosQuery());
         }
 
         protected override void OnActivated(EventArgs e)
@@ -38,7 +42,7 @@ namespace Todos.Frontend
 
         public void Display(SelectTodosQueryResult result)
         {
-            var shownTodos = result.Todos.ToList().FindAll(t => filter switch
+            var shownTodos = result.Todos.ToList().FindAll(t => footer.Filter switch
             {
                 Filter.All => true,
                 Filter.Active => !t.IsCompleted,
@@ -48,14 +52,9 @@ namespace Todos.Frontend
             todoList.ItemsSource = shownTodos;
             toggleAll.IsChecked = result.Todos.Select(t => t.IsCompleted).Aggregate(false, (e1, e2) => e1 && e2);
             var activeCount = result.Todos.ToList().FindAll(t => !t.IsCompleted).Count();
-            this.activeCount.Text = $"{activeCount} {pluralize(activeCount, "item")} left";
+            footer.ActiveCount = activeCount;
             var completedCount = result.Todos.Length - activeCount;
-            clearCompleted.Visibility = completedCount > 0 ? Visibility.Visible : Visibility.Hidden;
-        }
-
-        private static string pluralize(int count, string word)
-        {
-            return count > 1 ? $"{word}s" : word;
+            footer.CompletedCount = completedCount;
         }
 
         #endregion
@@ -171,35 +170,5 @@ namespace Todos.Frontend
         }
 
         #endregion
-
-        #region Footer
-
-        private void HandleFilterAll(object sender, RoutedEventArgs e)
-        {
-            filter = Filter.All;
-            OnSelectTodosQuery?.Invoke(new SelectTodosQuery());
-        }
-
-        private void HandleFilterActive(object sender, RoutedEventArgs e)
-        {
-            filter = Filter.Active;
-            OnSelectTodosQuery?.Invoke(new SelectTodosQuery());
-        }
-
-        private void HandleFilterCompleted(object sender, RoutedEventArgs e)
-        {
-            filter = Filter.Completed;
-            OnSelectTodosQuery?.Invoke(new SelectTodosQuery());
-        }
-
-        private void HandleClearCompleted(object sender, RoutedEventArgs e)
-        {
-            OnClearCompletedCommand?.Invoke(new ClearCompletedCommand());
-            OnSelectTodosQuery?.Invoke(new SelectTodosQuery());
-        }
-
-        #endregion
     }
-
-    enum Filter { All, Active, Completed }
 }
