@@ -77,7 +77,7 @@ namespace Todos.Frontend
 
         #endregion
 
-        #region Todo List
+        #region Main
 
         private void HandleToggleAll(object sender, RoutedEventArgs e)
         {
@@ -85,10 +85,6 @@ namespace Todos.Frontend
             var isChecked = checkBox.IsChecked ?? false;
             OnToggleAllCommand?.Invoke(new ToggleAllCommand(isChecked));
         }
-
-        #endregion
-
-        #region Todo Item
 
         private void HandleToggle(object sender, RoutedEventArgs e)
         {

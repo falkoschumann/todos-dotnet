@@ -12,41 +12,48 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        
         <!-- Header -->
         <Grid Grid.Row="0" Margin="5,5,5,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="30" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <CheckBox Name="toggleAll" Grid.Column="0" Click="HandleToggleAll" />
             <TextBox Grid.Column="1" KeyDown="HandleNewTodoKeyDown" />
         </Grid>
-        <!-- Todo List -->
-        <ListBox Grid.Row="1" Name="todoList" IsSynchronizedWithCurrentItem="True" HorizontalContentAlignment="Stretch">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <!-- Todo Item -->
-                    <StackPanel Tag="{Binding}">
-                        <Grid Name="view">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="auto" />
-                            </Grid.ColumnDefinitions>
-                            <CheckBox Grid.Column="0" IsChecked="{Binding IsCompleted}" Click="HandleToggle" Margin="0,0,10,0" VerticalAlignment="Center" />
-                            <TextBlock Grid.Column="1" Text="{Binding Title}" MouseDown="HandleEdit" VerticalAlignment="Center" />
-                            <Button Grid.Column="2" Width="20" Height="20"  Click="HandleDestroy" Margin="10,0,0,0" VerticalAlignment="Center">X</Button>
-                        </Grid>
-                        <Grid Name="edit" Visibility="Collapsed">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBox Name="text" Text="{Binding Title}" LostFocus="HandleSubmit" KeyDown="HandleKeyDown" />
-                        </Grid>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        
+        <!-- Main -->
+        <Grid Grid.Row="1">
+            <Canvas>
+                <CheckBox Name="toggleAll" Canvas.Top="-22" Canvas.Left="7" Click="HandleToggleAll" />
+            </Canvas>
+            <ListBox Name="todoList" IsSynchronizedWithCurrentItem="True" HorizontalContentAlignment="Stretch">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <!-- Todo Item -->
+                        <StackPanel Tag="{Binding}">
+                            <Grid Name="view">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Grid.Column="0" IsChecked="{Binding IsCompleted}" Click="HandleToggle" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="{Binding Title}" MouseDown="HandleEdit" VerticalAlignment="Center" />
+                                <Button Grid.Column="2" Width="20" Height="20"  Click="HandleDestroy" Margin="10,0,0,0" VerticalAlignment="Center">X</Button>
+                            </Grid>
+                            <Grid Name="edit" Visibility="Collapsed">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Name="text" Text="{Binding Title}" LostFocus="HandleSubmit" KeyDown="HandleKeyDown" />
+                            </Grid>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        
         <!-- Footer -->
         <Grid Grid.Row="2" Margin="5,5,5,5">
             <Grid.ColumnDefinitions>
