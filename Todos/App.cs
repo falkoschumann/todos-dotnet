@@ -13,6 +13,7 @@ namespace Todos
         [STAThread]
         public static void Main()
         {
+            // TODO: Save todos in a file
             var repo = new MemoryTodosRepository();
             Todo[] todos = {
                 new Todo(Id : 1, Title: "Taste JavaScript", IsCompleted: true),

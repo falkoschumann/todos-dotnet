@@ -14,9 +14,8 @@ namespace Todos.Frontend
     /// </summary>
     public partial class MainWindow : Window
     {
-        // TODO: Extrahiere Header
-        // TODO: Extrahiere Main
-        // TODO: Mache Main und Footer unsichtbar, wenn es keine Todos gibt
+        // TODO: Extract Main
+        // TODO: Main and Footer are invisble, when no todos exist
 
         public event Action<AddTodoCommand>? OnAddTodoCommand;
         public event Action<ClearCompletedCommand>? OnClearCompletedCommand;
@@ -29,6 +28,7 @@ namespace Todos.Frontend
         public MainWindow()
         {
             InitializeComponent();
+            header.OnAddTodo += title => OnAddTodoCommand?.Invoke(new AddTodoCommand(title));
             footer.OnClearCompleted += () => OnClearCompletedCommand?.Invoke(new ClearCompletedCommand());
             footer.OnFilterChanged += f => OnSelectTodosQuery?.Invoke(new SelectTodosQuery());
         }
@@ -55,23 +55,6 @@ namespace Todos.Frontend
             footer.ActiveCount = activeCount;
             var completedCount = result.Todos.Length - activeCount;
             footer.CompletedCount = completedCount;
-        }
-
-        #endregion
-
-        #region Header
-
-        private void HandleNewTodoKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key != Key.Enter)
-            {
-                return;
-            }
-
-            var textBox = (TextBox)sender;
-            var title = textBox.Text.Trim();
-            OnAddTodoCommand?.Invoke(new AddTodoCommand(title));
-            textBox.Text = "";
         }
 
         #endregion
