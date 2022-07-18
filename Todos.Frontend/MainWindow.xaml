@@ -12,41 +12,8 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
         <local:Header Grid.Row="0" x:Name="header" />
-
-        <!-- Main -->
-        <Grid Grid.Row="1">
-            <Canvas>
-                <CheckBox Name="toggleAll" Canvas.Top="-22" Canvas.Left="7" Click="HandleToggleAll" />
-            </Canvas>
-            <ListBox Name="todoList" IsSynchronizedWithCurrentItem="True" HorizontalContentAlignment="Stretch">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <!-- Todo Item -->
-                        <StackPanel Tag="{Binding}">
-                            <Grid Name="view">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="auto" />
-                                </Grid.ColumnDefinitions>
-                                <CheckBox Grid.Column="0" IsChecked="{Binding IsCompleted}" Click="HandleToggle" Margin="0,0,10,0" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" Text="{Binding Title}" MouseDown="HandleEdit" VerticalAlignment="Center" />
-                                <Button Grid.Column="2" Width="20" Height="20"  Click="HandleDestroy" Margin="10,0,0,0" VerticalAlignment="Center">X</Button>
-                            </Grid>
-                            <Grid Name="edit" Visibility="Collapsed">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <TextBox Name="text" Text="{Binding Title}" LostFocus="HandleSubmit" KeyDown="HandleKeyDown" />
-                            </Grid>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </Grid>
-        
+        <local:TodoList Grid.Row="1" x:Name="todoList" />
         <local:Footer Grid.Row="2" x:Name="footer" />
     </Grid>
 </Window>

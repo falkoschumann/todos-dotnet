@@ -14,7 +14,6 @@ namespace Todos.Frontend
     /// </summary>
     public partial class MainWindow : Window
     {
-        // TODO: Extract Main
         // TODO: Main and Footer are invisble, when no todos exist
 
         public event Action<AddTodoCommand>? OnAddTodoCommand;
@@ -28,7 +27,11 @@ namespace Todos.Frontend
         public MainWindow()
         {
             InitializeComponent();
-            header.OnAddTodo += title => OnAddTodoCommand?.Invoke(new AddTodoCommand(title));
+            header.OnAddTodo += t => OnAddTodoCommand?.Invoke(new AddTodoCommand(t));
+            todoList.OnToggleAll += c => OnToggleAllCommand?.Invoke(new ToggleAllCommand(c));
+            todoList.OnToggle += id => OnToggleTodoCommand?.Invoke(new ToggleTodoCommand(id));
+            todoList.OnDestroy += id => OnDestroyTodoCommand?.Invoke(new DestroyTodoCommand(id));
+            todoList.OnSave += (id, title) => OnSaveTodoCommand?.Invoke(new SaveTodoCommand(id, title));
             footer.OnClearCompleted += () => OnClearCompletedCommand?.Invoke(new ClearCompletedCommand());
             footer.OnFilterChanged += f => OnSelectTodosQuery?.Invoke(new SelectTodosQuery());
         }
@@ -37,8 +40,6 @@ namespace Todos.Frontend
         {
             OnSelectTodosQuery?.Invoke(new SelectTodosQuery());
         }
-
-        #region Messages
 
         public void Display(SelectTodosQueryResult result)
         {
@@ -49,109 +50,12 @@ namespace Todos.Frontend
                 Filter.Completed => t.IsCompleted,
                 _ => false,
             });
-            todoList.ItemsSource = shownTodos;
-            toggleAll.IsChecked = result.Todos.Select(t => t.IsCompleted).Aggregate(false, (e1, e2) => e1 && e2);
-            var activeCount = result.Todos.ToList().FindAll(t => !t.IsCompleted).Count();
-            footer.ActiveCount = activeCount;
+            var activeCount = result.Todos.ToList().FindAll(t => !t.IsCompleted).Count;
             var completedCount = result.Todos.Length - activeCount;
+            todoList.Todos = shownTodos;
+            todoList.updateToggleAll(activeCount, completedCount);
+            footer.ActiveCount = activeCount;
             footer.CompletedCount = completedCount;
         }
-
-        #endregion
-
-        #region Main
-
-        private void HandleToggleAll(object sender, RoutedEventArgs e)
-        {
-            var checkBox = (CheckBox)sender;
-            var isChecked = checkBox.IsChecked ?? false;
-            OnToggleAllCommand?.Invoke(new ToggleAllCommand(isChecked));
-        }
-
-        private void HandleToggle(object sender, RoutedEventArgs e)
-        {
-            var todo = GetTodo(sender);
-            OnToggleTodoCommand?.Invoke(new ToggleTodoCommand(todo.Id));
-        }
-
-        private void HandleDestroy(object sender, RoutedEventArgs e)
-        {
-            var todo = GetTodo(sender);
-            OnDestroyTodoCommand?.Invoke(new DestroyTodoCommand(todo.Id));
-        }
-
-        private void HandleEdit(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ClickCount != 2)
-            {
-                return;
-            }
-
-            Debug.WriteLine("HandleEdit");
-            var todo = GetTodo(sender);
-            var (view, edit, text) = GetControls(sender);
-            view.Visibility = Visibility.Collapsed;
-            edit.Visibility = Visibility.Visible;
-            text.SelectAll();
-            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, () =>
-            {
-                text.Focus();
-            });
-        }
-        private void HandleSubmit(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("HandleSubmit");
-            var todo = GetTodo(sender);
-            var control = (TextBox)sender;
-            OnSaveTodoCommand?.Invoke(new SaveTodoCommand(todo.Id, control.Text));
-            var (view, edit, _) = GetControls(sender);
-            view.Visibility = Visibility.Visible;
-            edit.Visibility = Visibility.Collapsed;
-        }
-
-        private void HandleKeyDown(object sender, KeyEventArgs e)
-        {
-            Debug.WriteLine("HandleKeyDown");
-            switch (e.Key)
-            {
-                case Key.Enter:
-                    HandleSubmit(sender, e);
-                    break;
-                case Key.Escape:
-                    HandleCancel(sender);
-                    break;
-            }
-        }
-
-        private static void HandleCancel(object sender)
-        {
-            var todo = GetTodo(sender);
-            var (view, edit, text) = GetControls(sender);
-            text.Text = todo.Title;
-            view.Visibility = Visibility.Visible;
-            edit.Visibility = Visibility.Collapsed;
-        }
-
-        private static Todo GetTodo(object sender)
-        {
-            var element = (FrameworkElement)sender;
-            var parent = (FrameworkElement)element.Parent;
-            var stack = (StackPanel)parent.Parent;
-            var todo = (Todo)stack.Tag;
-            return todo;
-        }
-
-        private static (FrameworkElement, FrameworkElement, TextBox) GetControls(object sender)
-        {
-            var element = (FrameworkElement)sender;
-            var parent = (FrameworkElement)element.Parent;
-            var stack = (StackPanel)parent.Parent;
-            var view = (FrameworkElement)stack.Children[0];
-            var edit = (FrameworkElement)stack.Children[1];
-            var text = (TextBox)edit.FindName("text");
-            return (view, edit, text);
-        }
-
-        #endregion
     }
 }
