@@ -14,8 +14,6 @@ namespace Todos.Frontend
     /// </summary>
     public partial class MainWindow : Window
     {
-        // TODO: Main and Footer are invisble, when no todos exist
-
         public event Action<AddTodoCommand>? OnAddTodoCommand;
         public event Action<ClearCompletedCommand>? OnClearCompletedCommand;
         public event Action<DestroyTodoCommand>? OnDestroyTodoCommand;
@@ -52,8 +50,10 @@ namespace Todos.Frontend
             });
             var activeCount = result.Todos.ToList().FindAll(t => !t.IsCompleted).Count;
             var completedCount = result.Todos.Length - activeCount;
+            todoList.Visibility = result.Todos.Length > 0 ? Visibility.Visible : Visibility.Hidden;
             todoList.Todos = shownTodos;
             todoList.updateToggleAll(activeCount, completedCount);
+            footer.Visibility = result.Todos.Length > 0 ? Visibility.Visible : Visibility.Hidden;
             footer.ActiveCount = activeCount;
             footer.CompletedCount = completedCount;
         }
