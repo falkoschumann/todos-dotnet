@@ -15,13 +15,19 @@ namespace Todos.Backend.Adapters
 
         public Todo[] LoadTodos()
         {
+            if (!File.Exists(this.filename))
+            {
+                return Array.Empty<Todo>();
+            }
+
             var json = File.ReadAllText(this.filename);
             return JsonSerializer.Deserialize<Todo[]>(json)!;
         }
 
         public void StoreTodos(Todo[] todos)
         {
-            var json = JsonSerializer.Serialize(todos);
+            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            var json = JsonSerializer.Serialize(todos, options);
             File.WriteAllText(this.filename, json);
         }
     }

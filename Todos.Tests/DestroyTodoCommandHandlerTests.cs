@@ -12,8 +12,8 @@ namespace Todos.Tests
         {
             var repo = new MemoryTodosRepository();
             Todo[] todos = {
-                new Todo(Id : 1, Title: "Taste JavaScript", IsCompleted: true),
-                new Todo(Id : 2, Title: "Buy Unicorn", IsCompleted: false),
+                new Todo(1, "Taste JavaScript", true),
+                new Todo(2, "Buy Unicorn"),
             };
             repo.StoreTodos(todos);
             var handler = new DestroyTodoCommandHandler(repo);
@@ -22,7 +22,7 @@ namespace Todos.Tests
 
             Assert.That(status, Is.EqualTo(new Success()));
             Todo[] expected = {
-                new Todo(Id : 2, Title: "Buy Unicorn", IsCompleted: false),
+                new Todo(2, "Buy Unicorn"),
             };
             Assert.That(repo.LoadTodos(), Is.EqualTo(expected));
         }

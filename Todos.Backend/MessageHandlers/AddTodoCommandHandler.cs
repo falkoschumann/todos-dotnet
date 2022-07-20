@@ -30,7 +30,7 @@ namespace Todos.Backend.MessageHandlers
 
             var id = todos.Select(t => t.Id).DefaultIfEmpty(0).Max();
             id++;
-            var todo = new Todo(id, title, IsCompleted: false);
+            var todo = new Todo(id, title);
             todos.Add(todo);
             return todos;
         }
