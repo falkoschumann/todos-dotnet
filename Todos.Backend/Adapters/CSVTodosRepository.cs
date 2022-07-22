@@ -1,5 +1,8 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using System;
+using System.IO;
+using System.Linq;
 using Todos.Contract;
 using Todos.Contract.Data;
 
@@ -21,19 +24,27 @@ namespace Todos.Backend.Adapters
                 return Array.Empty<Todo>();
             }
 
-            using var reader = new StreamReader(filename);
-            using var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
-            csv.Context.RegisterClassMap<TodoMap>();
-            var records = csv.GetRecords<Todo>();
-            return records.ToArray();
+            using (var reader = new StreamReader(filename))
+            {
+                using (var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture))
+                {
+                    csv.Context.RegisterClassMap<TodoMap>();
+                    var records = csv.GetRecords<Todo>();
+                    return records.ToArray();
+                }
+            }
         }
 
         public void StoreTodos(Todo[] todos)
         {
-            using var writer = new StreamWriter(filename);
-            using var csv = new CsvWriter(writer, System.Globalization.CultureInfo.InvariantCulture);
-            csv.Context.RegisterClassMap<TodoMap>();
-            csv.WriteRecords(todos);
+            using (var writer = new StreamWriter(filename))
+            {
+                using (var csv = new CsvWriter(writer, System.Globalization.CultureInfo.InvariantCulture))
+                {
+                    csv.Context.RegisterClassMap<TodoMap>();
+                    csv.WriteRecords(todos);
+                }
+            }
         }
     }
 

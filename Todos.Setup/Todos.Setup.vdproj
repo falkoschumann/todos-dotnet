@@ -56,6 +56,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -77,30 +85,15 @@
             {
             "Enabled" = "11:TRUE"
             "PromptEnabled" = "11:TRUE"
-            "PrerequisitesLocation" = "2:2"
+            "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Msbuild\\Microsoft\\VisualStudio\\BootstrapperPackages"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.CoreRuntime.6.0.x64"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
                     {
-                    "Name" = "8:.NET Runtime 6.0.7 (x64)"
-                    "ProductCode" = "8:Microsoft.NetCore.CoreRuntime.6.0.x64"
-                    }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.CoreRuntime.6.0.x86"
-                    {
-                    "Name" = "8:.NET Runtime 6.0.7 (x86)"
-                    "ProductCode" = "8:Microsoft.NetCore.CoreRuntime.6.0.x86"
-                    }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.DesktopRuntime.6.0.x64"
-                    {
-                    "Name" = "8:.NET Desktop-Runtime 6.0.7 (x64)"
-                    "ProductCode" = "8:Microsoft.NetCore.DesktopRuntime.6.0.x64"
-                    }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.DesktopRuntime.6.0.x86"
-                    {
-                    "Name" = "8:.NET Desktop-Runtime 6.0.7 (x86)"
-                    "ProductCode" = "8:Microsoft.NetCore.DesktopRuntime.6.0.x86"
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 und x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
                     }
                 }
             }
@@ -232,7 +225,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Todos.Setup"
         "ProductCode" = "8:{2971883E-549D-4053-A0E5-F962F94B794A}"
-        "PackageCode" = "8:{D48FF496-6506-4703-800D-EF4F43C200E9}"
+        "PackageCode" = "8:{8207287B-279A-405B-A222-F8FF00BFD573}"
         "UpgradeCode" = "8:{F5F69930-3E37-4FA0-BD4B-E29689B51272}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"

@@ -1,4 +1,8 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Todos.Contract;
 using Todos.Contract.Data;
 
@@ -21,14 +25,40 @@ namespace Todos.Backend.Adapters
             }
 
             var json = File.ReadAllText(this.filename);
-            return JsonSerializer.Deserialize<Todo[]>(json)!;
+            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            var dtos = JsonSerializer.Deserialize<TodoDTO[]>(json, options);
+            return dtos.ToList()
+                .Select(t => new Todo(t.Id, t.Title, t.IsCompleted))
+                .ToArray();
         }
 
         public void StoreTodos(Todo[] todos)
         {
             var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-            var json = JsonSerializer.Serialize(todos, options);
+            var dtos = todos.ToList()
+                .Select(t => new TodoDTO(t.Id, t.Title, t.IsCompleted))
+                .ToArray();
+            var json = JsonSerializer.Serialize(dtos, options);
             File.WriteAllText(this.filename, json);
         }
+    }
+
+    internal struct TodoDTO
+    {
+        public TodoDTO(int id, string title, bool isCompleted = false)
+        {
+            Id = id;
+            Title = title;
+            IsCompleted = isCompleted;
+        }
+
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [JsonPropertyName("title")]
+        public string Title { get; set; }
+
+        [JsonPropertyName("completed")]
+        public bool IsCompleted { get; set; }
     }
 }

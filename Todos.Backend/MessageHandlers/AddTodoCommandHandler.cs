@@ -1,4 +1,6 @@
-﻿using Todos.Contract;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Todos.Contract;
 using Todos.Contract.Data;
 using Todos.Contract.Messages;
 
