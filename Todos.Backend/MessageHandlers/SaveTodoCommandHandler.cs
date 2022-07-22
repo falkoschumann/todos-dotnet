@@ -16,7 +16,7 @@ namespace Todos.Backend.MessageHandlers
         public ICommandStatus Handle(SaveTodoCommand command)
         {
             var todos = repo.LoadTodos().ToList();
-            todos = Save(todos, command.Id, command.Title);
+            todos = Save(todos, command.ID, command.Title);
             repo.StoreTodos(todos.ToArray());
             return new Success();
         }

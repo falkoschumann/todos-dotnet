@@ -2,9 +2,17 @@
 
 namespace Todos.Contract.Messages
 {
-    public readonly record struct SelectTodosQuery();
+    public readonly struct SelectTodosQuery { }
 
-    public readonly record struct SelectTodosQueryResult(Todo[] Todos);
+    public readonly struct SelectTodosQueryResult
+    {
+        public SelectTodosQueryResult(Todo[] todos)
+        {
+            Todos = todos;
+        }
+
+        public Todo[] Todos { get; }
+    }
 
     public interface ISelectTodosQueryHandling
     {

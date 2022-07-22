@@ -1,8 +1,10 @@
-﻿using System.Text.Json.Serialization;
+﻿// using System.Text.Json.Serialization;
 
 namespace Todos.Contract.Data
 {
-    public record class Todo
+    // TODO Verschiebe Serialisierung ins Backend
+    // TODO Mache aus class eine (readonly) struct
+    public class Todo
     {
         public Todo() : this(0, "") { }
 
@@ -13,13 +15,13 @@ namespace Todos.Contract.Data
             IsCompleted = isCompleted;
         }
 
-        [JsonPropertyName("id")]
+        //[JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("title")]
+        //[JsonPropertyName("title")]
         public string Title { get; set; }
 
-        [JsonPropertyName("completed")]
+        //[JsonPropertyName("completed")]
         public bool IsCompleted { get; set; } = false;
     };
 }

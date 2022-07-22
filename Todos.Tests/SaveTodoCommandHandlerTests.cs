@@ -18,7 +18,7 @@ namespace Todos.Tests
             repo.StoreTodos(todos);
             var handler = new SaveTodoCommandHandler(repo);
 
-            var status = handler.Handle(new SaveTodoCommand(Id: 1, Title: "Taste TypeScript"));
+            var status = handler.Handle(new SaveTodoCommand(1, "Taste TypeScript"));
 
             Assert.That(status, Is.EqualTo(new Success()));
             Todo[] expected = {
@@ -39,7 +39,7 @@ namespace Todos.Tests
             repo.StoreTodos(todos);
             var handler = new SaveTodoCommandHandler(repo);
 
-            var status = handler.Handle(new SaveTodoCommand(Id: 1, Title: ""));
+            var status = handler.Handle(new SaveTodoCommand(1, ""));
 
             Assert.That(status, Is.EqualTo(new Success()));
             Todo[] expected = {

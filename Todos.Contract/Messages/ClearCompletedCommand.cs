@@ -1,6 +1,6 @@
 ﻿namespace Todos.Contract.Messages
 {
-    public readonly record struct ClearCompletedCommand();
+    public readonly struct ClearCompletedCommand { }
 
     public interface IClearCompletedCommandHandling
     {

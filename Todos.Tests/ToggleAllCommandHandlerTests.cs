@@ -18,7 +18,7 @@ namespace Todos.Tests
             repo.StoreTodos(todos);
             var handler = new ToggleAllCommandHandler(repo);
 
-            var status = handler.Handle(new ToggleAllCommand(IsCompleted: false));
+            var status = handler.Handle(new ToggleAllCommand(isCompleted: false));
 
             Assert.That(status, Is.EqualTo(new Success()));
             Todo[] expected = {
@@ -39,7 +39,7 @@ namespace Todos.Tests
             repo.StoreTodos(todos);
             var handler = new ToggleAllCommandHandler(repo);
 
-            var status = handler.Handle(new ToggleAllCommand(IsCompleted: true));
+            var status = handler.Handle(new ToggleAllCommand(isCompleted: true));
 
             Assert.That(status, Is.EqualTo(new Success()));
             Todo[] expected = {

@@ -1,6 +1,14 @@
 ﻿namespace Todos.Contract.Messages
 {
-    public readonly record struct AddTodoCommand(string Title);
+    public readonly struct AddTodoCommand
+    {
+        public AddTodoCommand(string title)
+        {
+            Title = title;
+        }
+
+        public string Title { get; }
+    }
 
     public interface IAddTodoCommandHandling
     {

@@ -1,6 +1,13 @@
 ﻿namespace Todos.Contract.Messages
 {
-    public readonly record struct ToggleTodoCommand(int ID);
+    public readonly struct ToggleTodoCommand
+    {
+        public ToggleTodoCommand(int id) {
+            ID = id;
+        }
+
+        public int ID { get; }
+    }
 
     public interface IToggleTodoCommandHandling
     {

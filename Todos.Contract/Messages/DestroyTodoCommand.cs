@@ -1,6 +1,14 @@
 ﻿namespace Todos.Contract.Messages
 {
-    public readonly record struct DestroyTodoCommand(int ID);
+    public readonly struct DestroyTodoCommand
+    {
+        public DestroyTodoCommand(int id)
+        {
+            ID = id;
+        }
+
+        public int ID { get; }
+    }
 
     public interface IDestroyTodoCommandHandling
     {

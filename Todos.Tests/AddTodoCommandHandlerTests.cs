@@ -15,7 +15,7 @@ namespace Todos.Tests
             repo.StoreTodos(todos);
             var handler = new AddTodoCommandHandler(repo);
 
-            var status = handler.Handle(new AddTodoCommand(Title: "Taste JavaScript"));
+            var status = handler.Handle(new AddTodoCommand("Taste JavaScript"));
 
             Assert.That(status, Is.EqualTo(new Success()));
             Todo[] expected = {
@@ -33,7 +33,7 @@ namespace Todos.Tests
             repo.StoreTodos(todos);
             var handler = new AddTodoCommandHandler(repo);
 
-            var status = handler.Handle(new AddTodoCommand(Title: "Buy Unicorn"));
+            var status = handler.Handle(new AddTodoCommand("Buy Unicorn"));
 
             Assert.That(status, Is.EqualTo(new Success()));
             Todo[] expected = {
@@ -53,7 +53,7 @@ namespace Todos.Tests
             repo.StoreTodos(todos);
             var handler = new AddTodoCommandHandler(repo);
 
-            var status = handler.Handle(new AddTodoCommand(Title: ""));
+            var status = handler.Handle(new AddTodoCommand(""));
 
             Assert.That(status, Is.EqualTo(new Success()));
             Todo[] expected = {

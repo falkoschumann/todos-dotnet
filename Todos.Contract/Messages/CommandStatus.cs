@@ -2,7 +2,15 @@
 {
     public interface ICommandStatus { }
 
-    public readonly record struct Success() : ICommandStatus;
+    public readonly struct Success : ICommandStatus { };
 
-    public readonly record struct Failure(string ErrorMessage) : ICommandStatus;
+    public readonly struct Failure : ICommandStatus
+    {
+        public Failure(string errorMessage)
+        {
+            ErrorMessage = errorMessage;
+        }
+
+        public string ErrorMessage { get; }
+    }
 }

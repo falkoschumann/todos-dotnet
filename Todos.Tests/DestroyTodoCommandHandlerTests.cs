@@ -18,7 +18,7 @@ namespace Todos.Tests
             repo.StoreTodos(todos);
             var handler = new DestroyTodoCommandHandler(repo);
 
-            var status = handler.Handle(new DestroyTodoCommand(ID: 1));
+            var status = handler.Handle(new DestroyTodoCommand(1));
 
             Assert.That(status, Is.EqualTo(new Success()));
             Todo[] expected = {
@@ -34,7 +34,7 @@ namespace Todos.Tests
             repo.StoreTodos(todos);
             var handler = new DestroyTodoCommandHandler(repo);
 
-            var status = handler.Handle(new DestroyTodoCommand(ID: 42));
+            var status = handler.Handle(new DestroyTodoCommand(42));
 
             Assert.That(status, Is.EqualTo(new Success()));
             var expected = Array.Empty<Todo>();
