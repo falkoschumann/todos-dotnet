@@ -20,7 +20,7 @@ namespace Todos.Frontend
     /// </summary>
     public partial class Header : UserControl
     {
-        public event Action<string>? OnAddTodo;
+        public event Action<string> OnAddTodo;
 
         public Header()
         {
@@ -41,7 +41,7 @@ namespace Todos.Frontend
                 return;
             }
 
-            OnAddTodo?.Invoke(title);
+            OnAddTodo(title);
             textBox.Text = "";
         }
     }

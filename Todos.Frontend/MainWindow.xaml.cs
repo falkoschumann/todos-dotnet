@@ -14,39 +14,45 @@ namespace Todos.Frontend
     /// </summary>
     public partial class MainWindow : Window
     {
-        public event Action<AddTodoCommand>? OnAddTodoCommand;
-        public event Action<ClearCompletedCommand>? OnClearCompletedCommand;
-        public event Action<DestroyTodoCommand>? OnDestroyTodoCommand;
-        public event Action<SaveTodoCommand>? OnSaveTodoCommand;
-        public event Action<ToggleAllCommand>? OnToggleAllCommand;
-        public event Action<ToggleTodoCommand>? OnToggleTodoCommand;
-        public event Action<SelectTodosQuery>? OnSelectTodosQuery;
+        public event Action<AddTodoCommand> OnAddTodoCommand;
+        public event Action<ClearCompletedCommand> OnClearCompletedCommand;
+        public event Action<DestroyTodoCommand> OnDestroyTodoCommand;
+        public event Action<SaveTodoCommand> OnSaveTodoCommand;
+        public event Action<ToggleAllCommand> OnToggleAllCommand;
+        public event Action<ToggleTodoCommand> OnToggleTodoCommand;
+        public event Action<SelectTodosQuery> OnSelectTodosQuery;
 
         public MainWindow()
         {
             InitializeComponent();
-            header.OnAddTodo += t => OnAddTodoCommand?.Invoke(new AddTodoCommand(t));
-            todoList.OnToggleAll += c => OnToggleAllCommand?.Invoke(new ToggleAllCommand(c));
-            todoList.OnToggle += id => OnToggleTodoCommand?.Invoke(new ToggleTodoCommand(id));
-            todoList.OnDestroy += id => OnDestroyTodoCommand?.Invoke(new DestroyTodoCommand(id));
-            todoList.OnSave += (id, title) => OnSaveTodoCommand?.Invoke(new SaveTodoCommand(id, title));
-            footer.OnClearCompleted += () => OnClearCompletedCommand?.Invoke(new ClearCompletedCommand());
-            footer.OnFilterChanged += f => OnSelectTodosQuery?.Invoke(new SelectTodosQuery());
+            header.OnAddTodo += t => OnAddTodoCommand(new AddTodoCommand(t));
+            todoList.OnToggleAll += c => OnToggleAllCommand(new ToggleAllCommand(c));
+            todoList.OnToggle += id => OnToggleTodoCommand(new ToggleTodoCommand(id));
+            todoList.OnDestroy += id => OnDestroyTodoCommand(new DestroyTodoCommand(id));
+            todoList.OnSave += (id, title) => OnSaveTodoCommand(new SaveTodoCommand(id, title));
+            footer.OnClearCompleted += () => OnClearCompletedCommand(new ClearCompletedCommand());
+            footer.OnFilterChanged += f => OnSelectTodosQuery(new SelectTodosQuery());
         }
 
         protected override void OnActivated(EventArgs e)
         {
-            OnSelectTodosQuery?.Invoke(new SelectTodosQuery());
+            OnSelectTodosQuery(new SelectTodosQuery());
         }
 
         public void Display(SelectTodosQueryResult result)
         {
-            var shownTodos = result.Todos.ToList().FindAll(t => footer.Filter switch
-            {
-                Filter.All => true,
-                Filter.Active => !t.IsCompleted,
-                Filter.Completed => t.IsCompleted,
-                _ => false,
+            var shownTodos = result.Todos.ToList().FindAll(t => {
+                switch(footer.Filter)
+                {
+                    case Filter.All:
+                        return true;
+                    case Filter.Active:
+                        return !t.IsCompleted;
+                    case Filter.Completed:
+                        return t.IsCompleted;
+                    default:
+                        return false;
+                }
             });
             var activeCount = result.Todos.ToList().FindAll(t => !t.IsCompleted).Count;
             var completedCount = result.Todos.Count - activeCount;

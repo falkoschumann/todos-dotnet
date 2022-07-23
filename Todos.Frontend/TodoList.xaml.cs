@@ -22,10 +22,10 @@ namespace Todos.Frontend
     /// </summary>
     public partial class TodoList : UserControl
     {
-        public event Action<bool>? OnToggleAll;
-        public event Action<int>? OnToggle;
-        public event Action<int>? OnDestroy;
-        public event Action<int, string>? OnSave;
+        public event Action<bool> OnToggleAll;
+        public event Action<int> OnToggle;
+        public event Action<int> OnDestroy;
+        public event Action<int, string> OnSave;
 
         public TodoList()
         {
@@ -39,26 +39,32 @@ namespace Todos.Frontend
 
         public void updateToggleAll(int activeCount, int completedCount)
         {
-            toggleAll.IsChecked = activeCount > 0 && completedCount > 0 ? null : activeCount == 0;
+            if (activeCount > 0 && completedCount > 0)
+            {
+                toggleAll.IsChecked = null;
+            } else
+            {
+                toggleAll.IsChecked = activeCount == 0;
+            }
         }
 
         private void HandleToggleAll(object sender, RoutedEventArgs e)
         {
             var checkBox = (CheckBox)sender;
             var isChecked = checkBox.IsChecked ?? false;
-            OnToggleAll?.Invoke(isChecked);
+            OnToggleAll(isChecked);
         }
 
         private void HandleToggle(object sender, RoutedEventArgs e)
         {
             var todo = GetTodo(sender);
-            OnToggle?.Invoke(todo.Id);
+            OnToggle(todo.Id);
         }
 
         private void HandleDestroy(object sender, RoutedEventArgs e)
         {
             var todo = GetTodo(sender);
-            OnDestroy?.Invoke(todo.Id);
+            OnDestroy(todo.Id);
         }
 
         private void HandleEdit(object sender, MouseButtonEventArgs e)
@@ -73,16 +79,14 @@ namespace Todos.Frontend
             view.Visibility = Visibility.Collapsed;
             edit.Visibility = Visibility.Visible;
             text.SelectAll();
-            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, () =>
-            {
-                text.Focus();
-            });
+            Action focusNewTodo = delegate { text.Focus(); };
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, focusNewTodo);
         }
         private void HandleSubmit(object sender, RoutedEventArgs e)
         {
             var todo = GetTodo(sender);
             var control = (TextBox)sender;
-            OnSave?.Invoke(todo.Id, control.Text);
+            OnSave(todo.Id, control.Text);
             var (view, edit, _) = GetControls(sender);
             view.Visibility = Visibility.Visible;
             edit.Visibility = Visibility.Collapsed;

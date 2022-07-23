@@ -20,8 +20,8 @@ namespace Todos.Frontend
     /// </summary>
     public partial class Footer : UserControl
     {
-        public event Action<Filter>? OnFilterChanged;
-        public event Action? OnClearCompleted;
+        public event Action<Filter> OnFilterChanged;
+        public event Action OnClearCompleted;
 
         public Footer()
         {
@@ -42,24 +42,24 @@ namespace Todos.Frontend
         private void HandleFilterAll(object sender, RoutedEventArgs e)
         {
             Filter = Filter.All;
-            OnFilterChanged?.Invoke(Filter);
+            OnFilterChanged(Filter);
         }
 
         private void HandleFilterActive(object sender, RoutedEventArgs e)
         {
             Filter = Filter.Active;
-            OnFilterChanged?.Invoke(Filter);
+            OnFilterChanged(Filter);
         }
 
         private void HandleFilterCompleted(object sender, RoutedEventArgs e)
         {
             Filter = Filter.Completed;
-            OnFilterChanged?.Invoke(Filter);
+            OnFilterChanged(Filter);
         }
 
         private void HandleClearCompleted(object sender, RoutedEventArgs e)
         {
-            OnClearCompleted?.Invoke();
+            OnClearCompleted();
         }
     }
 }
