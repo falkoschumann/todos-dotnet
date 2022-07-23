@@ -36,6 +36,7 @@ namespace Todos.Frontend
 
         protected override void OnActivated(EventArgs e)
         {
+            header.FocusNewTodo();
             OnSelectTodosQuery(new SelectTodosQuery());
         }
 

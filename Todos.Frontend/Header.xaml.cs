@@ -27,6 +27,11 @@ namespace Todos.Frontend
             InitializeComponent();
         }
 
+        public void FocusNewTodo()
+        {
+            newTodo.Focus();
+        }
+
         private void HandleNewTodoKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter)
