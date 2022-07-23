@@ -1,10 +1,12 @@
-﻿using Todos.Contract.Data;
+﻿using System.Collections.Generic;
+using Todos.Contract.Data;
 
 namespace Todos.Contract
 {
     public interface ITodosRepository
     {
-        Todo[] LoadTodos();
-        void StoreTodos(Todo[] todos);
+        IReadOnlyList<Todo> LoadTodos();
+        
+        void StoreTodos(IReadOnlyList<Todo> todos);
     }
 }

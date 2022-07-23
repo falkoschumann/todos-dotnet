@@ -1,4 +1,5 @@
-﻿using Todos.Contract.Data;
+﻿using System.Collections.Generic;
+using Todos.Contract.Data;
 
 namespace Todos.Contract.Messages
 {
@@ -6,12 +7,12 @@ namespace Todos.Contract.Messages
 
     public readonly struct SelectTodosQueryResult
     {
-        public SelectTodosQueryResult(Todo[] todos)
+        public SelectTodosQueryResult(IReadOnlyList<Todo> todos)
         {
             Todos = todos;
         }
 
-        public Todo[] Todos { get; }
+        public IReadOnlyList<Todo> Todos { get; }
     }
 
     public interface ISelectTodosQueryHandling

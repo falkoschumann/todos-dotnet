@@ -49,11 +49,11 @@ namespace Todos.Frontend
                 _ => false,
             });
             var activeCount = result.Todos.ToList().FindAll(t => !t.IsCompleted).Count;
-            var completedCount = result.Todos.Length - activeCount;
-            todoList.Visibility = result.Todos.Length > 0 ? Visibility.Visible : Visibility.Hidden;
+            var completedCount = result.Todos.Count - activeCount;
+            todoList.Visibility = result.Todos.Count > 0 ? Visibility.Visible : Visibility.Hidden;
             todoList.Todos = shownTodos;
             todoList.updateToggleAll(activeCount, completedCount);
-            footer.Visibility = result.Todos.Length > 0 ? Visibility.Visible : Visibility.Hidden;
+            footer.Visibility = result.Todos.Count > 0 ? Visibility.Visible : Visibility.Hidden;
             footer.ActiveCount = activeCount;
             footer.CompletedCount = completedCount;
         }

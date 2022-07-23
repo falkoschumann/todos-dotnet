@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Todos.Contract;
@@ -17,7 +18,7 @@ namespace Todos.Backend.Adapters
             _filename = filename;
         }
 
-        public Todo[] LoadTodos()
+        public IReadOnlyList<Todo> LoadTodos()
         {
             if (!File.Exists(_filename))
             {
@@ -35,7 +36,7 @@ namespace Todos.Backend.Adapters
             }
         }
 
-        public void StoreTodos(Todo[] todos)
+        public void StoreTodos(IReadOnlyList<Todo> todos)
         {
             using (var writer = new StreamWriter(_filename))
             {

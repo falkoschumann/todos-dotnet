@@ -20,15 +20,15 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
-                            <CheckBox Grid.Column="0" IsChecked="{Binding IsCompleted}" Click="HandleToggle" Margin="0,0,10,0" VerticalAlignment="Center" />
-                            <TextBlock Grid.Column="1" Text="{Binding Title}" MouseDown="HandleEdit" VerticalAlignment="Center" />
+                            <CheckBox Grid.Column="0" IsChecked="{Binding IsCompleted, Mode=OneTime}" Click="HandleToggle" Margin="0,0,10,0" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="{Binding Title, Mode=OneTime}" MouseDown="HandleEdit" VerticalAlignment="Center" />
                             <Button Grid.Column="2" Width="20" Height="20"  Click="HandleDestroy" Margin="10,0,0,0" VerticalAlignment="Center">X</Button>
                         </Grid>
                         <Grid Name="edit" Visibility="Collapsed">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBox Name="text" Text="{Binding Title}" LostFocus="HandleSubmit" KeyDown="HandleKeyDown" />
+                            <TextBox Name="text" Text="{Binding Title, Mode=OneTime}" LostFocus="HandleSubmit" KeyDown="HandleKeyDown" />
                         </Grid>
                     </StackPanel>
                 </DataTemplate>
