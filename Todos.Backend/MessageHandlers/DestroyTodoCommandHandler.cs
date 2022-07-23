@@ -8,18 +8,18 @@ namespace Todos.Backend.MessageHandlers
 {
     public class DestroyTodoCommandHandler : IDestroyTodoCommandHandling
     {
-        private readonly ITodosRepository repo;
+        private readonly ITodosRepository _repo;
 
         public DestroyTodoCommandHandler(ITodosRepository repo)
         {
-            this.repo = repo;
+            _repo = repo;
         }
 
         public ICommandStatus Handle(DestroyTodoCommand command)
         {
-            var todos = repo.LoadTodos().ToList();
+            var todos = _repo.LoadTodos().ToList();
             todos = Destroy(todos, command.ID);
-            repo.StoreTodos(todos.ToArray());
+            _repo.StoreTodos(todos.ToArray());
             return new Success();
         }
 

@@ -10,21 +10,21 @@ namespace Todos.Backend.Adapters
 {
     public class CSVTodosRepository : ITodosRepository
     {
-        private readonly string filename;
+        private readonly string _filename;
 
         public CSVTodosRepository(string filename)
         {
-            this.filename = filename;
+            _filename = filename;
         }
 
         public Todo[] LoadTodos()
         {
-            if (!File.Exists(this.filename))
+            if (!File.Exists(_filename))
             {
                 return Array.Empty<Todo>();
             }
 
-            using (var reader = new StreamReader(filename))
+            using (var reader = new StreamReader(_filename))
             {
                 using (var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture))
                 {
@@ -37,7 +37,7 @@ namespace Todos.Backend.Adapters
 
         public void StoreTodos(Todo[] todos)
         {
-            using (var writer = new StreamWriter(filename))
+            using (var writer = new StreamWriter(_filename))
             {
                 using (var csv = new CsvWriter(writer, System.Globalization.CultureInfo.InvariantCulture))
                 {

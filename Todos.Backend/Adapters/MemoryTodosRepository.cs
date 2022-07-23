@@ -6,16 +6,16 @@ namespace Todos.Backend.Adapters
 {
     public class MemoryTodosRepository : ITodosRepository
     {
-        private Todo[] todos = Array.Empty<Todo>();
+        private Todo[] _todos = Array.Empty<Todo>();
 
         public Todo[] LoadTodos()
         {
-            return todos;
+            return _todos;
         }
 
         public void StoreTodos(Todo[] todos)
         {
-            this.todos = todos;
+            _todos = todos;
         }
     }
 }

@@ -5,16 +5,16 @@ namespace Todos.Backend.MessageHandlers
 {
     public class SelectTodosQueryHandler : ISelectTodosQueryHandling
     {
-        private readonly ITodosRepository repo;
+        private readonly ITodosRepository _repo;
 
         public SelectTodosQueryHandler(ITodosRepository repo)
         {
-            this.repo = repo;
+            _repo = repo;
         }
 
         public SelectTodosQueryResult Handle(SelectTodosQuery query)
         {
-            var todos = repo.LoadTodos();
+            var todos = _repo.LoadTodos();
             return new SelectTodosQueryResult(todos);
         }
     }
