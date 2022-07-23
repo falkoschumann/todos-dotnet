@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -17,7 +18,7 @@ namespace Todos.Backend.Adapters
             _filename = filename;
         }
 
-        public Todo[] LoadTodos()
+        public IReadOnlyList<Todo> LoadTodos()
         {
             if (!File.Exists(_filename))
             {
@@ -32,7 +33,7 @@ namespace Todos.Backend.Adapters
                 .ToArray();
         }
 
-        public void StoreTodos(Todo[] todos)
+        public void StoreTodos(IReadOnlyList<Todo> todos)
         {
             var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
             var dtos = todos.ToList()

@@ -1,6 +1,6 @@
 ﻿namespace Todos.Contract.Data
 {
-    public struct Todo
+    public readonly struct Todo
     {
         public Todo(int id = 0, string title = "", bool isCompleted = false)
         {
@@ -9,10 +9,10 @@
             IsCompleted = isCompleted;
         }
 
-        public int Id { get; set; }
+        public int Id { get; }
 
-        public string Title { get; set; }
+        public string Title { get; }
 
-        public bool IsCompleted { get; set; }
-    };
+        public bool IsCompleted { get; }
+    }
 }
