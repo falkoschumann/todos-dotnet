@@ -8,18 +8,18 @@ namespace Todos.Backend.MessageHandlers
 {
     public class ClearCompletedCommandHandler : IClearCompletedCommandHandling
     {
-        private readonly ITodosRepository repo;
+        private readonly ITodosRepository _repo;
 
         public ClearCompletedCommandHandler(ITodosRepository repo)
         {
-            this.repo = repo;
+            _repo = repo;
         }
 
         public ICommandStatus Handle(ClearCompletedCommand command)
         {
-            var todos = repo.LoadTodos().ToList();
+            var todos = _repo.LoadTodos().ToList();
             todos = Clear(todos);
-            repo.StoreTodos(todos.ToArray());
+            _repo.StoreTodos(todos.ToArray());
             return new Success();
         }
 

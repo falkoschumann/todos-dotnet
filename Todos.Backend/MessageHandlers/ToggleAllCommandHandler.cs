@@ -8,18 +8,18 @@ namespace Todos.Backend.MessageHandlers
 {
     public class ToggleAllCommandHandler : IToggleAllCommandHandling
     {
-        private readonly ITodosRepository repo;
+        private readonly ITodosRepository _repo;
 
         public ToggleAllCommandHandler(ITodosRepository repo)
         {
-            this.repo = repo;
+            _repo = repo;
         }
 
         public ICommandStatus Handle(ToggleAllCommand command)
         {
-            var todos = repo.LoadTodos().ToList();
+            var todos = _repo.LoadTodos().ToList();
             todos = Toggle(todos, command.IsCompleted);
-            repo.StoreTodos(todos.ToArray());
+            _repo.StoreTodos(todos.ToArray());
             return new Success();
         }
 

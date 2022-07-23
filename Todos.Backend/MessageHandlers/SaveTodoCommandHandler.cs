@@ -8,18 +8,18 @@ namespace Todos.Backend.MessageHandlers
 {
     public class SaveTodoCommandHandler : ISaveTodoCommandHandling
     {
-        private readonly ITodosRepository repo;
+        private readonly ITodosRepository _repo;
 
         public SaveTodoCommandHandler(ITodosRepository repo)
         {
-            this.repo = repo;
+            _repo = repo;
         }
 
         public ICommandStatus Handle(SaveTodoCommand command)
         {
-            var todos = repo.LoadTodos().ToList();
+            var todos = _repo.LoadTodos().ToList();
             todos = Save(todos, command.ID, command.Title);
-            repo.StoreTodos(todos.ToArray());
+            _repo.StoreTodos(todos.ToArray());
             return new Success();
         }
 

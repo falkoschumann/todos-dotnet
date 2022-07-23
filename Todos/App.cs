@@ -20,9 +20,11 @@ namespace Todos
                 new Todo(2, "Buy Unicorn"),
             };
             repo.StoreTodos(todos);
+            repo.StoreTodos(todos);
             */
-            //var repo = new JSONTodosRepository("todos.json");
-            var repo = new CSVTodosRepository("todos.csv");
+            
+            var repo = new JSONTodosRepository("todos.json");
+            //var repo = new CSVTodosRepository("todos.csv");
 
             var addTodoCommandHandler = new AddTodoCommandHandler(repo);
             var clearCompletedCommandHandler = new ClearCompletedCommandHandler(repo);

@@ -10,21 +10,21 @@ namespace Todos.Backend.Adapters
 {
     public class JSONTodosRepository : ITodosRepository
     {
-        private readonly string filename;
+        private readonly string _filename;
 
         public JSONTodosRepository(string filename)
         {
-            this.filename = filename;
+            _filename = filename;
         }
 
         public Todo[] LoadTodos()
         {
-            if (!File.Exists(this.filename))
+            if (!File.Exists(_filename))
             {
                 return Array.Empty<Todo>();
             }
 
-            var json = File.ReadAllText(this.filename);
+            var json = File.ReadAllText(_filename);
             var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
             var dtos = JsonSerializer.Deserialize<TodoDTO[]>(json, options);
             return dtos.ToList()
@@ -39,7 +39,7 @@ namespace Todos.Backend.Adapters
                 .Select(t => new TodoDTO(t.Id, t.Title, t.IsCompleted))
                 .ToArray();
             var json = JsonSerializer.Serialize(dtos, options);
-            File.WriteAllText(this.filename, json);
+            File.WriteAllText(_filename, json);
         }
     }
 
