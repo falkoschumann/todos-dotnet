@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using Todos.Backend.Adapters;
 using Todos.Backend.MessageHandlers;
@@ -22,8 +24,14 @@ namespace Todos
             repo.StoreTodos(todos);
             repo.StoreTodos(todos);
             */
-            
-            var repo = new JSONTodosRepository("todos.json");
+            var dataDir = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Muspellheim",
+                "Todos"
+            );
+            Directory.CreateDirectory(dataDir);
+            var dataFile = Path.Combine(dataDir, "todos.json");
+            var repo = new JSONTodosRepository(dataFile);
             //var repo = new CSVTodosRepository("todos.csv");
 
             var addTodoCommandHandler = new AddTodoCommandHandler(repo);
