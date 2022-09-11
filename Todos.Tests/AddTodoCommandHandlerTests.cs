@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using System;
 using Todos.Backend.Adapters;
 using Todos.Backend.MessageHandlers;
 using Todos.Contract.Data;
@@ -13,8 +12,6 @@ namespace Todos.Tests
         public void AddTodo_SavesNewTodo()
         {
             var repo = new MemoryTodosRepository();
-            var todos = Array.Empty<Todo>();
-            repo.StoreTodos(todos);
             var handler = new AddTodoCommandHandler(repo);
 
             var status = handler.Handle(new AddTodoCommand("Taste JavaScript"));
@@ -28,11 +25,10 @@ namespace Todos.Tests
 
         public void AddTodo_IncrementsId()
         {
-            var repo = new MemoryTodosRepository();
             Todo[] todos = {
                 new Todo(1, "Taste JavaScript", true),
             };
-            repo.StoreTodos(todos);
+            var repo = new MemoryTodosRepository(todos);
             var handler = new AddTodoCommandHandler(repo);
 
             var status = handler.Handle(new AddTodoCommand("Buy Unicorn"));
@@ -48,11 +44,10 @@ namespace Todos.Tests
         [Test]
         public void AddTodo_DoesNothingIfTitleIsEmpty()
         {
-            var repo = new MemoryTodosRepository();
             Todo[] todos = {
                 new Todo(1, "Taste JavaScript", true),
             };
-            repo.StoreTodos(todos);
+            var repo = new MemoryTodosRepository(todos);
             var handler = new AddTodoCommandHandler(repo);
 
             var status = handler.Handle(new AddTodoCommand(""));

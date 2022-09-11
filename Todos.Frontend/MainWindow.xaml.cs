@@ -1,10 +1,6 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using Todos.Contract.Data;
 using Todos.Contract.Messages;
 
 namespace Todos.Frontend
@@ -42,8 +38,9 @@ namespace Todos.Frontend
 
         public void Display(SelectTodosQueryResult result)
         {
-            var shownTodos = result.Todos.ToList().FindAll(t => {
-                switch(footer.Filter)
+            var shownTodos = result.Todos.ToList().FindAll(t =>
+            {
+                switch (footer.Filter)
                 {
                     case Filter.All:
                         return true;

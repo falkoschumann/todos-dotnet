@@ -11,12 +11,11 @@ namespace Todos.Tests
         [Test]
         public void SaveTodo_ChangesTodosTitle()
         {
-            var repo = new MemoryTodosRepository();
             Todo[] todos = {
                 new Todo(1, "Taste JavaScript", true),
                 new Todo(2, "Buy Unicorn"),
             };
-            repo.StoreTodos(todos);
+            var repo = new MemoryTodosRepository(todos);
             var handler = new SaveTodoCommandHandler(repo);
 
             var status = handler.Handle(new SaveTodoCommand(1, "Taste TypeScript"));
@@ -32,12 +31,11 @@ namespace Todos.Tests
         [Test]
         public void SaveTodo_DestroyTodoIfTitleIsEmpty()
         {
-            var repo = new MemoryTodosRepository();
             Todo[] todos = {
                 new Todo(1, "Taste JavaScript", true),
                 new Todo(2, "Buy Unicorn"),
             };
-            repo.StoreTodos(todos);
+            var repo = new MemoryTodosRepository(todos);
             var handler = new SaveTodoCommandHandler(repo);
 
             var status = handler.Handle(new SaveTodoCommand(1, ""));

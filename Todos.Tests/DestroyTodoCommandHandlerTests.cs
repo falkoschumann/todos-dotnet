@@ -12,12 +12,11 @@ namespace Todos.Tests
         [Test]
         public void DestroyTodo_DestroysATodo()
         {
-            var repo = new MemoryTodosRepository();
             Todo[] todos = {
                 new Todo(1, "Taste JavaScript", true),
                 new Todo(2, "Buy Unicorn"),
             };
-            repo.StoreTodos(todos);
+            var repo = new MemoryTodosRepository(todos);
             var handler = new DestroyTodoCommandHandler(repo);
 
             var status = handler.Handle(new DestroyTodoCommand(1));
@@ -32,8 +31,6 @@ namespace Todos.Tests
         public void DestroyTodo_DoesNothingIfTodoDoesNotExist()
         {
             var repo = new MemoryTodosRepository();
-            var todos = Array.Empty<Todo>();
-            repo.StoreTodos(todos);
             var handler = new DestroyTodoCommandHandler(repo);
 
             var status = handler.Handle(new DestroyTodoCommand(42));

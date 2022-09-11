@@ -36,7 +36,7 @@ namespace Todos.Backend.Adapters
             }
         }
 
-        public void StoreTodos(IReadOnlyList<Todo> todos)
+        public void StoreTodos(IEnumerable<Todo> todos)
         {
             using (var writer = new StreamWriter(_filename))
             {

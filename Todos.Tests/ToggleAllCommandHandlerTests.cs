@@ -11,12 +11,11 @@ namespace Todos.Tests
         [Test]
         public void ToggleAll_SetAllTodosActive()
         {
-            var repo = new MemoryTodosRepository();
             Todo[] todos = {
                 new Todo(1, "Taste JavaScript", true),
                 new Todo(2, "Buy Unicorn"),
             };
-            repo.StoreTodos(todos);
+            var repo = new MemoryTodosRepository(todos);
             var handler = new ToggleAllCommandHandler(repo);
 
             var status = handler.Handle(new ToggleAllCommand(isCompleted: false));
@@ -32,12 +31,11 @@ namespace Todos.Tests
         [Test]
         public void ToggleAll_SetAllTodosCompleted()
         {
-            var repo = new MemoryTodosRepository();
             Todo[] todos = {
                 new Todo(1, "Taste JavaScript", true),
                 new Todo(2, "Buy Unicorn"),
             };
-            repo.StoreTodos(todos);
+            var repo = new MemoryTodosRepository(todos);
             var handler = new ToggleAllCommandHandler(repo);
 
             var status = handler.Handle(new ToggleAllCommand(isCompleted: true));

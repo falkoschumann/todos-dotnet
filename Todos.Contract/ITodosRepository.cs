@@ -6,7 +6,7 @@ namespace Todos.Contract
     public interface ITodosRepository
     {
         IReadOnlyList<Todo> LoadTodos();
-        
-        void StoreTodos(IReadOnlyList<Todo> todos);
+
+        void StoreTodos(IEnumerable<Todo> todos);
     }
 }

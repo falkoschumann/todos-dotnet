@@ -1,7 +1,8 @@
 ﻿namespace Todos.Contract.Messages
 {
-    public readonly  struct SaveTodoCommand {
-    public SaveTodoCommand(int id, string title)
+    public readonly struct SaveTodoCommand
+    {
+        public SaveTodoCommand(int id, string title)
         {
             ID = id;
             Title = title;

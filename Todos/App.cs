@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using Todos.Backend.Adapters;
 using Todos.Backend.MessageHandlers;
-using Todos.Contract.Data;
 using Todos.Contract.Messages;
 using Todos.Frontend;
 
@@ -16,13 +14,11 @@ namespace Todos
         public static void Main()
         {
             /*
-            var repo = new MemoryTodosRepository();
             Todo[] todos = {
                 new Todo(1, "Taste JavaScript", isCompleted: true),
                 new Todo(2, "Buy Unicorn"),
             };
-            repo.StoreTodos(todos);
-            repo.StoreTodos(todos);
+            var repo = new MemoryTodosRepository(todos);
             */
             var dataDir = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),

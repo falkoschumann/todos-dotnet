@@ -7,16 +7,23 @@ namespace Todos.Backend.Adapters
 {
     public class MemoryTodosRepository : ITodosRepository
     {
-        private IReadOnlyList<Todo> _todos = Array.Empty<Todo>();
+        private IReadOnlyList<Todo> _todos;
+
+        public MemoryTodosRepository() : this(Array.Empty<Todo>()) { }
+
+        public MemoryTodosRepository(IEnumerable<Todo> todos)
+        {
+            StoreTodos(todos);
+        }
 
         public IReadOnlyList<Todo> LoadTodos()
         {
             return _todos;
         }
 
-        public void StoreTodos(IReadOnlyList<Todo> todos)
+        public void StoreTodos(IEnumerable<Todo> todos)
         {
-            _todos = todos;
+            _todos = new List<Todo>(todos).AsReadOnly();
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Todos.Backend.Adapters
                 .ToArray();
         }
 
-        public void StoreTodos(IReadOnlyList<Todo> todos)
+        public void StoreTodos(IEnumerable<Todo> todos)
         {
             var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
             var dtos = todos.ToList()

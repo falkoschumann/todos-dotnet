@@ -2,7 +2,8 @@
 {
     public readonly struct ToggleTodoCommand
     {
-        public ToggleTodoCommand(int id) {
+        public ToggleTodoCommand(int id)
+        {
             ID = id;
         }
 
